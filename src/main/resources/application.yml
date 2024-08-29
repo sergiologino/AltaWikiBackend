@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: WikiBackend
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: wiki-content
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wikidb
+    username: postgres
+    password: postgres
+#    hikari:
+#      #      schema: news
+#      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
+#      connection-timeout: 10000
+
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
+

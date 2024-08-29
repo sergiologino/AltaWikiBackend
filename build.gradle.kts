@@ -1,16 +1,20 @@
+//jdk.tools.jlink.resources.
 plugins {
     java
-    id("org.springframework.boot") version "3.3.3"
-    id("io.spring.dependency-management") version "1.1.6"
+    id("org.springframework.boot") version "3.2.3"
+    id("io.spring.dependency-management") version "1.1.4"
 }
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
+//java {
+//    toolchain {
+//        languageVersion = JavaLanguageVersion.of(17)
+//    }
+//}
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 configurations {
@@ -33,12 +37,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.6");
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+
     implementation("io.swagger.core.v3:swagger-annotations:2.2.14")
     implementation("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
     implementation("jakarta.validation:jakarta.validation-api")
 
     compileOnly("org.projectlombok:lombok")
+    runtimeOnly ("org.postgresql:postgresql")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

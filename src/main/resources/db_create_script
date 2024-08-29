@@ -1,0 +1,35 @@
+-- Создание базы данных
+CREATE DATABASE wikidb;
+
+-- Подключение к базе данных
+\c wikidb;
+
+-- Создание таблицы пользователей
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- Создание таблицы ролей
+CREATE TABLE roles (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Создание таблицы документов
+CREATE TABLE documents (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    parent_id INTEGER REFERENCES documents(id)
+);
+
+-- Создание таблицы связывания пользователей и ролей (многие ко многим)
+CREATE TABLE user_roles (
+    user_id INTEGER REFERENCES users(id),
+    role_id INTEGER REFERENCES roles(id),
+    PRIMARY KEY (user_id, role_id)
+);

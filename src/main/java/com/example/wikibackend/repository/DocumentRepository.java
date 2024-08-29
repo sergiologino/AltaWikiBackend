@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     List<Document> findByParentId(Long parentId);
+
+    List <Document> findByTitleContaining(String name);
 }
 
