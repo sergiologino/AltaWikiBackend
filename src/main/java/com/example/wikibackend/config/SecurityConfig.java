@@ -3,6 +3,7 @@ package com.example.wikibackend.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -20,14 +21,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Разрешить доступ к Swagger и публичным ресурсам
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        // Разрешить доступ ко всем эндпойнтам пользователей и организаций
-                        .requestMatchers("/api/users/**", "/api/organizations/**").permitAll()
-                        // Разрешить доступ ко всем эндпойнтам ролей и документов
-                        .requestMatchers("/api/roles/**", "/api/documents/**", "/api/spaces/**").permitAll()
+                        // Разрешить доступ к эндпойнтам регистрации и авторизации пользователей
+                        .requestMatchers("/api/users/register", "/api/organizations/**").permitAll()
+                        // Разрешить доступ ко всем эндпойнтам пользователей
+                        .requestMatchers("/api/roles/**","/api/documents/**","/api/spaces/**").permitAll()
                         // Все остальные запросы требуют аутентификации
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable());
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
