@@ -1,7 +1,6 @@
 package com.example.wikibackend.dto;
 
 public class UserDTO {
-
     private String username;
     private String password;
     private String email;
@@ -40,4 +39,3 @@ public class UserDTO {
         this.email = email;
     }
 }
-

@@ -1,17 +1,12 @@
 package com.example.wikibackend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
 public class User {
 
     @Id
@@ -29,23 +24,84 @@ public class User {
 
     private boolean enabled;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserSpaceAccess> spaceAccesses = new HashSet<>();
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     // Конструкторы, геттеры и сеттеры
 
     public User() {}
 
-    // Другие конструкторы, геттеры и сеттеры...
-
-    public Set<UserSpaceAccess> getSpaceAccesses() {
-        return spaceAccesses;
+    public User(String username, String password, String email, boolean enabled) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.enabled = enabled;
+        this.deleted = false;
     }
 
-    public void setSpaceAccesses(Set<UserSpaceAccess> spaceAccesses) {
-        this.spaceAccesses = spaceAccesses;
+    // Геттеры и сеттеры
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
-        this.username=username;  }
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }

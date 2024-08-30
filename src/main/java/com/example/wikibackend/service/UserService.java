@@ -22,30 +22,33 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Метод для добавления нового пользователя
     public User addUser(UserDTO userDTO) {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setEnabled(true);
+        user.setDeleted(false);  // Устанавливаем значение false по умолчанию
         return userRepository.save(user);
     }
 
-
-    // Поиск пользователя по ID
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
+    public boolean authenticateUser(String username, String password) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
     }
 
-    // Удаление пользователя
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
-
-    // Получение всех пользователей
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAllByDeletedFalse();
+    }
+
+    public boolean deleteUser(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setDeleted(true); // Установка признака "deleted"
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }
-
