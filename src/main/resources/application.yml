@@ -6,7 +6,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: wiki-content
+      database: wikidb
 
   datasource:
     url: jdbc:postgresql://localhost:5432/wikidb
