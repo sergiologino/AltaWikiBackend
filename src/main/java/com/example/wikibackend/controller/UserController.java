@@ -29,7 +29,7 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"username\": \"john_doe\", \"password\": \"password123\", \"email\": \"john@example.com\"}"))),
+                            examples = @ExampleObject(value = "{\"username\": \"Sergey Savkin\", \"password\": \"123\", \"email\": \"savkin@altacod.ru\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан",
                             content = @Content(schema = @Schema(implementation = User.class))),
@@ -45,7 +45,7 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"username\": \"john_doe\", \"password\": \"password123\"}"))),
+                            examples = @ExampleObject(value = "{\"username\": \"Sergey Savkin\", \"password\": \"123\"}"))),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Авторизация успешна"),
                     @ApiResponse(responseCode = "401", description = "Некорректные учетные данные")
