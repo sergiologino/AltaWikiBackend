@@ -1,5 +1,10 @@
 package com.example.wikibackend.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class SpaceDTO {
     private String name;
     private String author;

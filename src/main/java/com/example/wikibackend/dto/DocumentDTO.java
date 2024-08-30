@@ -1,7 +1,11 @@
 package com.example.wikibackend.dto;
 
 import com.example.wikibackend.model.DocumentStatus;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class DocumentDTO {
     private String title;
     private DocumentStatus status;
