@@ -1,6 +1,8 @@
 package com.example.wikibackend.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 import java.util.HashSet;
@@ -8,6 +10,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -41,4 +45,7 @@ public class User {
     public void setSpaceAccesses(Set<UserSpaceAccess> spaceAccesses) {
         this.spaceAccesses = spaceAccesses;
     }
+
+    public void setUsername(String username) {
+        this.username=username;  }
 }
