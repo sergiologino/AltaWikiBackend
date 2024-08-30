@@ -1,10 +1,14 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
+import com.example.wikibackend.model.Space;
 import com.example.wikibackend.repository.DocumentRepository;
+import com.example.wikibackend.repository.SpaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,39 +16,59 @@ import java.util.Optional;
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
+    private final SpaceRepository spaceRepository;
 
     @Autowired
-    public DocumentService(DocumentRepository documentRepository) {
+    public DocumentService(DocumentRepository documentRepository, SpaceRepository spaceRepository) {
         this.documentRepository = documentRepository;
+        this.spaceRepository = spaceRepository;
     }
 
-    // Получение дерева всех документов
-    public List<Document> getDocumentTree() {
+    public List<Document> getAllDocuments() {
         return documentRepository.findAll();
     }
 
-    // Получение поддерева документов
-    public List<Document> getSubDocumentTree(Long parentId) {
-        return documentRepository.findByParentId(parentId);
-    }
+    public Document addDocument(DocumentDTO documentDTO) {
+        Document document = new Document();
+        document.setTitle(documentDTO.getTitle());
+        document.setStatus(documentDTO.getStatus());
+        document.setAuthor(documentDTO.getAuthor());
+        document.setCreatedAt(LocalDateTime.now());
+        document.setLastModifiedAt(LocalDateTime.now());
 
-    // Поиск документа по ID
-    public Optional<Document> findDocumentById(Long id) {
-        return documentRepository.findById(id);
-    }
+        Optional<Space> space = spaceRepository.findById(documentDTO.getSpaceId());
+        space.ifPresent(document::setSpace);
 
-    // Поиск документа по заголовку
-    public List<Document> searchDocumentByTitle(String title) {
-        return documentRepository.findByTitleContaining(title);
-    }
+        if (documentDTO.getParentId() != null) {
+            Optional<Document> parent = documentRepository.findById(documentDTO.getParentId());
+            parent.ifPresent(document::setParent);
+        }
 
-    // Сохранение документа
-    public Document saveDocument(Document document) {
         return documentRepository.save(document);
     }
 
-    // Удаление документа
-    public void deleteDocument(Long id) {
-        documentRepository.deleteById(id);
+    public Document updateDocument(Long id, DocumentDTO documentDTO) {
+        Optional<Document> optionalDocument = documentRepository.findById(id);
+        if (optionalDocument.isPresent()) {
+            Document document = optionalDocument.get();
+            document.setTitle(documentDTO.getTitle());
+            document.setStatus(documentDTO.getStatus());
+            document.setAuthor(documentDTO.getAuthor());
+            document.setLastModifiedAt(LocalDateTime.now());
+
+            Optional<Space> space = spaceRepository.findById(documentDTO.getSpaceId());
+            space.ifPresent(document::setSpace);
+
+            if (documentDTO.getParentId() != null) {
+                Optional<Document> parent = documentRepository.findById(documentDTO.getParentId());
+                parent.ifPresent(document::setParent);
+            } else {
+                document.setParent(null);
+            }
+
+            return documentRepository.save(document);
+        } else {
+            throw new IllegalArgumentException("Document not found");
+        }
     }
 }

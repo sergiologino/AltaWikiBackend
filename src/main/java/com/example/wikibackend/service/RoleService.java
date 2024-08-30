@@ -1,5 +1,6 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.dto.RoleDTO;
 import com.example.wikibackend.model.Role;
 import com.example.wikibackend.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +19,25 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    // Создание новой роли
-    public Role createRole(Role role) {
-        return roleRepository.save(role);
-    }
-
-    // Получение всех ролей
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
-    // Поиск роли по ID
-    public Optional<Role> findRoleById(Long id) {
-        return roleRepository.findById(id);
+    public Role addRole(RoleDTO roleDTO) {
+        Role role = new Role();
+        role.setName(roleDTO.getName());
+        return roleRepository.save(role);
     }
 
-    // Удаление роли
-    public void deleteRole(Long id) {
-        roleRepository.deleteById(id);
+    public Role updateRole(Long id, RoleDTO roleDTO) {
+        Optional<Role> optionalRole = roleRepository.findById(id);
+        if (optionalRole.isPresent()) {
+            Role role = optionalRole.get();
+            role.setName(roleDTO.getName());
+            return roleRepository.save(role);
+        } else {
+            throw new IllegalArgumentException("Role not found");
+        }
     }
 }
 

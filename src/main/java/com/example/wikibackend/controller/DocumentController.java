@@ -1,58 +1,70 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.dto.DocumentDTO;
+import com.example.wikibackend.model.Document;
+import com.example.wikibackend.service.DocumentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/documents")
 public class DocumentController {
 
-    // 1. Получение дерева всех документов
-    @GetMapping("/tree")
-    public ResponseEntity<String> getDocumentTree() {
-        // Мок ответа
-        return ResponseEntity.ok("Document tree retrieved successfully");
+    private final DocumentService documentService;
+
+    @Autowired
+    public DocumentController(DocumentService documentService) {
+        this.documentService = documentService;
     }
 
-    // 2. Получение дерева всех документов, подчиненных текущему
-    @GetMapping("/tree/{id}")
-    public ResponseEntity<String> getSubDocumentTree(@PathVariable Long id) {
-        // Мок ответа
-        return ResponseEntity.ok("Sub-document tree retrieved successfully");
+    @Operation(summary = "Получить все документы",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Список всех документов",
+                            content = @Content(schema = @Schema(implementation = Document.class)))
+            })
+    @GetMapping
+    public ResponseEntity<List<Document>> getAllDocuments() {
+        return ResponseEntity.ok(documentService.getAllDocuments());
     }
 
-    // 3. Получение документа по id
-    @GetMapping("/{id}")
-    public ResponseEntity<String> getDocumentById(@PathVariable Long id) {
-        // Мок ответа
-        return ResponseEntity.ok("Document retrieved successfully");
+    @Operation(summary = "Добавить новый документ",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DocumentDTO.class),
+                            examples = @ExampleObject(value = "{\"title\": \"Документ 1\", \"status\": \"ACTIVE\", \"author\": \"Автор\", \"spaceId\": 1, \"parentId\": null}"))),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Документ успешно добавлен",
+                            content = @Content(schema = @Schema(implementation = Document.class))),
+                    @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
+            })
+    @PostMapping
+    public ResponseEntity<Document> addDocument(@RequestBody DocumentDTO documentDTO) {
+        Document document = documentService.addDocument(documentDTO);
+        return ResponseEntity.status(201).body(document);
     }
 
-    // 4. Поиск документа по заголовку
-    @GetMapping("/search")
-    public ResponseEntity<String> searchDocumentByTitle(@RequestParam String title) {
-        // Мок ответа
-        return ResponseEntity.ok("Document found successfully");
-    }
-
-    // 5. Сохранение документа
-    @PostMapping("/")
-    public ResponseEntity<String> saveDocument(@RequestBody String document) {
-        // Мок ответа
-        return ResponseEntity.ok("Document saved successfully");
-    }
-
-    // 6. Изменение документа
+    @Operation(summary = "Изменить документ",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DocumentDTO.class),
+                            examples = @ExampleObject(value = "{\"title\": \"Обновленный документ\", \"status\": \"OUTDATED\", \"author\": \"Автор\", \"spaceId\": 1, \"parentId\": null}"))),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Документ успешно изменен",
+                            content = @Content(schema = @Schema(implementation = Document.class))),
+                    @ApiResponse(responseCode = "404", description = "Документ не найден")
+            })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateDocument(@PathVariable Long id, @RequestBody String document) {
-        // Мок ответа
-        return ResponseEntity.ok("Document updated successfully");
-    }
-
-    // 7. Удаление документа
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteDocument(@PathVariable Long id) {
-        // Мок ответа
-        return ResponseEntity.ok("Document deleted successfully");
+    public ResponseEntity<Document> updateDocument(@PathVariable Long id, @RequestBody DocumentDTO documentDTO) {
+        Document updatedDocument = documentService.updateDocument(id, documentDTO);
+        return ResponseEntity.ok(updatedDocument);
     }
 }
+
