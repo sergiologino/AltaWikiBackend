@@ -44,6 +44,8 @@ dependencies {
     implementation("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
 //    { exclude group: 'org.slf4j', module: 'slf4j-simple'}
     implementation("jakarta.validation:jakarta.validation-api")
+    implementation("junit:junit:4.13.1")
+    implementation("junit:junit:4.13.1")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly ("org.postgresql:postgresql")
