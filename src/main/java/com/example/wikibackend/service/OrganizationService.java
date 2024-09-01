@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrganizationService {
 
@@ -14,28 +16,22 @@ public class OrganizationService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Метод для регистрации новой организации
     public void registerOrganization(String organizationName) {
-        // Вставка новой организации и получение её ID из схемы admin
         String insertOrganizationSql = "INSERT INTO admin.organizations (name) VALUES (?) RETURNING id";
         Long organizationId = jdbcTemplate.queryForObject(insertOrganizationSql, new Object[]{organizationName}, Long.class);
 
-        // Создание схемы для новой организации
-        String schemaName = "o" + organizationId + "_schema";
+        String schemaName = "alt_" + organizationId + "_schema";
         createSchema(schemaName);
-
-        // Копирование структуры данных из шаблонной схемы
         copySchemaStructure("template_schema", schemaName);
     }
 
-    // Метод для создания новой схемы
     private void createSchema(String schemaName) {
         String createSchemaSql = "CREATE SCHEMA IF NOT EXISTS " + schemaName;
         jdbcTemplate.execute(createSchemaSql);
     }
 
-    // Метод для копирования структуры данных из одной схемы в другую
     private void copySchemaStructure(String sourceSchema, String targetSchema) {
+        // Копирование таблиц, как и прежде
         String copyTablesSql = String.format(
                 "DO $$ DECLARE " +
                         "  table_record RECORD; " +
@@ -46,20 +42,21 @@ public class OrganizationService {
                         "END $$;",
                 sourceSchema, targetSchema, sourceSchema
         );
-
         jdbcTemplate.execute(copyTablesSql);
 
+        // Исправленный SQL для копирования индексов
         String copyIndexesSql = String.format(
                 "DO $$ DECLARE " +
                         "  index_record RECORD; " +
                         "BEGIN " +
                         "  FOR index_record IN SELECT indexname, indexdef FROM pg_indexes WHERE schemaname = '%s' LOOP " +
-                        "    EXECUTE replace(index_record.indexdef, '%s', '%s'); " +
+                        "    EXECUTE 'CREATE INDEX ' || index_record.indexname || '_%s' || " +
+                        "    substring(indexdef from position(' ON ' in indexdef)) " +
+                        "    || ' ON %s.' || split_part(indexdef, ' ON %s.', 2); " +
                         "  END LOOP; " +
                         "END $$;",
-                sourceSchema, sourceSchema, targetSchema
+                sourceSchema, targetSchema, targetSchema, sourceSchema
         );
-
         jdbcTemplate.execute(copyIndexesSql);
     }
 }
