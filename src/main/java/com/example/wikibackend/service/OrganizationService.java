@@ -20,7 +20,7 @@ public class OrganizationService {
         String insertOrganizationSql = "INSERT INTO admin.organizations (name) VALUES (?) RETURNING id";
         Long organizationId = jdbcTemplate.queryForObject(insertOrganizationSql, new Object[]{organizationName}, Long.class);
 
-        String schemaName = "alt_" + organizationId + "_schema";
+        String schemaName = "alt_" + organizationId + "_data";
         createSchema(schemaName);
         copySchemaStructure("template_schema", schemaName);
     }

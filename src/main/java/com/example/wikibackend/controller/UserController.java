@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +30,15 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"username\": \"john_doe\", \"password\": \"password123\", \"email\": \"john@example.com\"}"))),
+                            examples = @ExampleObject(value = "{\"organization\": \"Altacod\", \"username\": \"john_doe\", \"password\": \"password123\", \"email\": \"john@example.com\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан",
                             content = @Content(schema = @Schema(implementation = User.class))),
                     @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
             })
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+        request.setAttribute("organizationId", userDTO.getOrganizationId());
         User user = userService.addUser(userDTO);
         return ResponseEntity.status(201).body(user);
     }

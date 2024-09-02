@@ -5,14 +5,18 @@ public class UserDTO {
     private String password;
     private String email;
 
+    private Long organizationId;
+
     // Конструкторы, геттеры и сеттеры
 
     public UserDTO() {}
 
-    public UserDTO(String username, String password, String email) {
+    public UserDTO(String username, String password, String email, Long organizationId) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.organizationId= organizationId;
+
     }
 
     public String getUsername() {
@@ -37,5 +41,13 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 }
