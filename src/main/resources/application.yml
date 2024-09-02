@@ -6,7 +6,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: wiki-content
+      database: wikidb
 
   datasource:
     url: jdbc:postgresql://localhost:5432/wikidb
@@ -16,6 +16,16 @@ spring:
 #      #      schema: news
 #      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
 #      connection-timeout: 10000
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+    generate-ddl: true
+
 
 springdoc:
   swagger-ui:

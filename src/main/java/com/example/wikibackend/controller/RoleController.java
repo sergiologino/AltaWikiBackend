@@ -1,58 +1,69 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.dto.RoleDTO;
+import com.example.wikibackend.model.Role;
+import com.example.wikibackend.service.RoleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/roles")
 public class RoleController {
 
-    // 1. Создание роли
-    @PostMapping("/")
-    public ResponseEntity<String> createRole(@RequestBody String role) {
-        // Мок ответа
-        return ResponseEntity.ok("Role created successfully");
+    private final RoleService roleService;
+
+    @Autowired
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
     }
 
-    // 2. Получение списка ролей
-    @GetMapping("/")
-    public ResponseEntity<String> getRoles() {
-        // Мок ответа
-        return ResponseEntity.ok("Roles retrieved successfully");
+    @Operation(summary = "Получить все роли",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Список всех ролей",
+                            content = @Content(schema = @Schema(implementation = Role.class)))
+            })
+    @GetMapping
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return ResponseEntity.ok(roleService.getAllRoles());
     }
 
-    // 3. Получение роли по id
-    @GetMapping("/{id}")
-    public ResponseEntity<String> getRoleById(@PathVariable Long id) {
-        // Мок ответа
-        return ResponseEntity.ok("Role retrieved successfully");
+    @Operation(summary = "Добавить новую роль",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoleDTO.class),
+                            examples = @ExampleObject(value = "{\"name\": \"Admin\"}"))),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Роль успешно добавлена",
+                            content = @Content(schema = @Schema(implementation = Role.class))),
+                    @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
+            })
+    @PostMapping
+    public ResponseEntity<Role> addRole(@RequestBody RoleDTO roleDTO) {
+        Role role = roleService.addRole(roleDTO);
+        return ResponseEntity.status(201).body(role);
     }
 
-    // 4. Удаление роли
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRole(@PathVariable Long id) {
-        // Мок ответа
-        return ResponseEntity.ok("Role deleted successfully");
-    }
-
-    // 5. Присвоение роли пользователю
-    @PostMapping("/assign")
-    public ResponseEntity<String> assignRoleToUser(@RequestParam Long userId, @RequestParam Long roleId) {
-        // Мок ответа
-        return ResponseEntity.ok("Role assigned to user successfully");
-    }
-
-    // 6. Отключение роли от пользователя
-    @PostMapping("/unassign")
-    public ResponseEntity<String> unassignRoleFromUser(@RequestParam Long userId, @RequestParam Long roleId) {
-        // Мок ответа
-        return ResponseEntity.ok("Role unassigned from user successfully");
-    }
-
-    // 7. Изменение роли
+    @Operation(summary = "Изменить роль",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RoleDTO.class),
+                            examples = @ExampleObject(value = "{\"name\": \"User\"}"))),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Роль успешно изменена",
+                            content = @Content(schema = @Schema(implementation = Role.class))),
+                    @ApiResponse(responseCode = "404", description = "Роль не найдена")
+            })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateRole(@PathVariable Long id, @RequestBody String role) {
-        // Мок ответа
-        return ResponseEntity.ok("Role updated successfully");
+    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
+        Role updatedRole = roleService.updateRole(id, roleDTO);
+        return ResponseEntity.ok(updatedRole);
     }
 }
