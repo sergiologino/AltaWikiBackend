@@ -1,5 +1,6 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.model.User;
 import com.example.wikibackend.service.UserService;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +37,12 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
             })
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO, HttpServletRequest request) {
-        request.setAttribute("organizationId", userDTO.getOrganizationId());
+    public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
+        // Устанавливаем organizationId в TenantContext
+        TenantContext.setCurrentTenant(userDTO.getOrganizationId());
         User user = userService.addUser(userDTO);
+        // Очищаем контекст после выполнения операции
+        TenantContext.clear();
         return ResponseEntity.status(201).body(user);
     }
 
