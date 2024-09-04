@@ -30,7 +30,7 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"organization\": \"Altacod\", \"username\": \"Вася\", \"password\": \"123\", \"email\": \"sample@altacod.ru\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": 10, \"username\": \"Вася\", \"password\": \"123\", \"email\": \"sample@altacod.ru\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан",
                             content = @Content(schema = @Schema(implementation = User.class))),
