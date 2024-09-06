@@ -1,3 +1,5 @@
+import java.util.regex.Pattern.compile
+
 //jdk.tools.jlink.resources.
 plugins {
     java
@@ -21,6 +23,7 @@ configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
+
 }
 
 repositories {
@@ -38,11 +41,17 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+    implementation("org.springframework.boot:spring-boot-starter-logging") {
+        exclude(group = "org.slf4j", module = "slf4j-simple")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-log4j2") {
+        exclude(group = "ch.qos.logback")
+    }
 
-    implementation("io.swagger.core.v3:swagger-annotations:2.2.14")
+    implementation("io.swagger.core.v3:swagger-core:2.1.0")
     implementation("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
-//    { exclude group: 'org.slf4j', module: 'slf4j-simple'}
+
     implementation("jakarta.validation:jakarta.validation-api")
     implementation("junit:junit:4.13.1")
     implementation("junit:junit:4.13.1")
@@ -54,6 +63,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 
 }
 
