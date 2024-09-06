@@ -1,46 +1,80 @@
--- Создание шаблонной схемы
-CREATE SCHEMA template_schema;
+-- Создание схемы template_schema
+CREATE SCHEMA IF NOT EXISTS template_schema;
 
--- Создание таблиц в шаблонной схеме
+-- Таблица пользователей
 CREATE TABLE template_schema.users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    enabled BOOLEAN NOT NULL DEFAULT TRUE
+                                       id SERIAL PRIMARY KEY,
+                                       username VARCHAR(255) UNIQUE NOT NULL,
+                                       email VARCHAR(255) UNIQUE NOT NULL,
+                                       password VARCHAR(255) NOT NULL,
+                                       enabled BOOLEAN NOT NULL DEFAULT TRUE,
+                                       deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+-- Таблица ролей
 CREATE TABLE template_schema.roles (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL
+                                       id SERIAL PRIMARY KEY,
+                                       role_name VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE template_schema.spaces (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    author VARCHAR(100) NOT NULL
+-- Таблица связей пользователей и ролей
+CREATE TABLE template_schema.user_roles (
+                                            user_id INT NOT NULL,
+                                            role_id INT NOT NULL,
+                                            CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES template_schema.users(id),
+                                            CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES template_schema.roles(id),
+                                            PRIMARY KEY (user_id, role_id)
 );
 
+-- Таблица разделов
+CREATE TABLE template_schema.sections (
+                                          id SERIAL PRIMARY KEY,
+                                          name VARCHAR(255) NOT NULL,
+                                          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                          author_id INT NOT NULL,
+                                          CONSTRAINT fk_section_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id)
+);
+
+-- Таблица документов
 CREATE TABLE template_schema.documents (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    last_modified_at TIMESTAMP NOT NULL,
-    author VARCHAR(100) NOT NULL,
-    space_id INTEGER NOT NULL,
-    parent_id INTEGER,
-    FOREIGN KEY (space_id) REFERENCES template_schema.spaces(id),
-    FOREIGN KEY (parent_id) REFERENCES template_schema.documents(id)
+                                           id SERIAL PRIMARY KEY,
+                                           title VARCHAR(255) NOT NULL,
+                                           status VARCHAR(50) NOT NULL,
+                                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                           last_modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                           author_id INT NOT NULL,
+                                           section_id INT,
+                                           parent_id INT,
+                                           CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id),
+                                           CONSTRAINT fk_section FOREIGN KEY(section_id) REFERENCES template_schema.sections(id),
+                                           CONSTRAINT fk_parent FOREIGN KEY(parent_id) REFERENCES template_schema.documents(id)
 );
 
 
-CREATE TABLE template_schema.user_space_access (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    space_id INTEGER NOT NULL,
-    access_type VARCHAR(20) NOT NULL,
-    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES template_schema.users(id),
-    CONSTRAINT fk_space FOREIGN KEY(space_id) REFERENCES template_schema.spaces(id)
-);
+
+-- Индексы для таблицы пользователей
+CREATE INDEX idx_users_username ON template_schema.users(username);
+CREATE INDEX idx_users_email ON template_schema.users(email);
+
+-- Индексы для таблицы ролей
+CREATE INDEX idx_roles_role_name ON template_schema.roles(role_name);
+
+-- Индексы для таблицы документов
+CREATE INDEX idx_documents_title ON template_schema.documents(title);
+CREATE INDEX idx_documents_status ON template_schema.documents(status);
+CREATE INDEX idx_documents_author_id ON template_schema.documents(author_id);
+
+-- Индексы для таблицы разделов
+CREATE INDEX idx_sections_name ON template_schema.sections(name);
+CREATE INDEX idx_sections_author_id ON template_schema.sections(author_id);
+
+-- Индексы для таблицы связей пользователей и ролей
+CREATE INDEX idx_user_roles_user_id ON template_schema.user_roles(user_id);
+CREATE INDEX idx_user_roles_role_id ON template_schema.user_roles(role_id);
+
+-- Уникальные ключи для таблицы пользователей и ролей
+ALTER TABLE template_schema.users ADD CONSTRAINT unique_username UNIQUE (username);
+ALTER TABLE template_schema.users ADD CONSTRAINT unique_email UNIQUE (email);
+ALTER TABLE template_schema.roles ADD CONSTRAINT unique_role_name UNIQUE (role_name);
+
+-- Триггеры или другие необходимые объекты можно добавить здесь
