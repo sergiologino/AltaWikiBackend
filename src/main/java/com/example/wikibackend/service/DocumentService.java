@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class DocumentService {
@@ -47,7 +48,7 @@ public class DocumentService {
         return documentRepository.save(document);
     }
 
-    public Document updateDocument(Long id, DocumentDTO documentDTO) {
+    public Document updateDocument(UUID id, DocumentDTO documentDTO) {
         Optional<Document> optionalDocument = documentRepository.findById(id);
         if (optionalDocument.isPresent()) {
             Document document = optionalDocument.get();

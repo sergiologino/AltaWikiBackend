@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SpaceService {
@@ -32,7 +33,7 @@ public class SpaceService {
         return spaceRepository.save(space);
     }
 
-    public Space updateSpace(Long id, SpaceDTO spaceDTO) {
+    public Space updateSpace(UUID id, SpaceDTO spaceDTO) {
         Optional<Space> optionalSpace = spaceRepository.findById(id);
         if (optionalSpace.isPresent()) {
             Space space = optionalSpace.get();

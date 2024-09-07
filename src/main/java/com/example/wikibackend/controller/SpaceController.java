@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/spaces")
@@ -62,7 +63,7 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Раздел не найден")
             })
     @PutMapping("/{id}")
-    public ResponseEntity<Space> updateSpace(@PathVariable Long id, @RequestBody SpaceDTO spaceDTO) {
+    public ResponseEntity<Space> updateSpace(@PathVariable UUID id, @RequestBody SpaceDTO spaceDTO) {
         Space updatedSpace = spaceService.updateSpace(id, spaceDTO);
         return ResponseEntity.ok(updatedSpace);
     }
