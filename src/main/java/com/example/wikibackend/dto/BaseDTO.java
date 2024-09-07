@@ -13,4 +13,5 @@ public class BaseDTO {
     public BaseDTO(String organization) {
         this.organization = organization;
     }
+
 }

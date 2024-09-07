@@ -14,5 +14,12 @@ public class RoleDTO extends BaseDTO {
         super(organization);
         this.roleName = roleName;
     }
+    public String getName() {
+        return roleName;
+    }
+
+    public void setName(String name) {
+        this.roleName = name;
+    }
 }
 

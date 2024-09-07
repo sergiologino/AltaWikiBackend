@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class RoleService {
@@ -29,7 +30,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public Role updateRole(Long id, RoleDTO roleDTO) {
+    public Role updateRole(UUID id, RoleDTO roleDTO) {
         Optional<Role> optionalRole = roleRepository.findById(id);
         if (optionalRole.isPresent()) {
             Role role = optionalRole.get();

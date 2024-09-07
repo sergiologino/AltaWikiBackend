@@ -27,12 +27,12 @@ CREATE TABLE template_schema.user_roles (
 );
 
 -- Таблица разделов
-CREATE TABLE template_schema.sections (
+CREATE TABLE template_schema.spaces (
                                           id SERIAL PRIMARY KEY,
                                           name VARCHAR(255) NOT NULL,
                                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                           author_id INT NOT NULL,
-                                          CONSTRAINT fk_section_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id)
+                                          CONSTRAINT fk_space_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id)
 );
 
 -- Таблица документов
@@ -46,7 +46,7 @@ CREATE TABLE template_schema.documents (
                                            section_id INT,
                                            parent_id INT,
                                            CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id),
-                                           CONSTRAINT fk_section FOREIGN KEY(section_id) REFERENCES template_schema.sections(id),
+                                           CONSTRAINT fk_section FOREIGN KEY(section_id) REFERENCES template_schema.spaces(id),
                                            CONSTRAINT fk_parent FOREIGN KEY(parent_id) REFERENCES template_schema.documents(id)
 );
 
@@ -65,8 +65,8 @@ CREATE INDEX idx_documents_status ON template_schema.documents(status);
 CREATE INDEX idx_documents_author_id ON template_schema.documents(author_id);
 
 -- Индексы для таблицы разделов
-CREATE INDEX idx_sections_name ON template_schema.sections(name);
-CREATE INDEX idx_sections_author_id ON template_schema.sections(author_id);
+CREATE INDEX idx_sections_name ON template_schema.spaces(name);
+CREATE INDEX idx_sections_author_id ON template_schema.spaces(author_id);
 
 -- Индексы для таблицы связей пользователей и ролей
 CREATE INDEX idx_user_roles_user_id ON template_schema.user_roles(user_id);

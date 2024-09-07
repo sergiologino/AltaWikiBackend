@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -62,7 +63,7 @@ public class RoleController {
                     @ApiResponse(responseCode = "404", description = "Роль не найдена")
             })
     @PutMapping("/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
+    public ResponseEntity<Role> updateRole(@PathVariable UUID id, @RequestBody RoleDTO roleDTO) {
         Role updatedRole = roleService.updateRole(id, roleDTO);
         return ResponseEntity.ok(updatedRole);
     }
