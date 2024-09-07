@@ -1,5 +1,6 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.model.User;
 import com.example.wikibackend.service.UserService;
@@ -29,7 +30,7 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"username\": \"john_doe\", \"password\": \"password123\", \"email\": \"john@example.com\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": 10, \"username\": \"Вася\", \"password\": \"123\", \"email\": \"sample@altacod.ru\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан",
                             content = @Content(schema = @Schema(implementation = User.class))),
@@ -37,7 +38,11 @@ public class UserController {
             })
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
+        // Устанавливаем organizationId в TenantContext
+        TenantContext.setCurrentTenant(userDTO.getOrganizationId());
         User user = userService.addUser(userDTO);
+        // Очищаем контекст после выполнения операции
+        TenantContext.clear();
         return ResponseEntity.status(201).body(user);
     }
 
