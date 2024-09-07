@@ -1,22 +1,20 @@
 package com.example.wikibackend.dto;
 
-public class OrganizationDTO {
-    private String organizationName;
+import lombok.Getter;
+import lombok.Setter;
 
-    // Конструкторы, геттеры и сеттеры
+@Getter
+@Setter
+public class OrganizationDTO extends BaseDTO {
+    private String name;
+    private String description;
 
     public OrganizationDTO() {}
 
-    public OrganizationDTO(String organizationName) {
-        this.organizationName = organizationName;
-    }
-
-    public String getOrganizationName() {
-        return organizationName;
-    }
-
-    public void setOrganizationName(String organizationName) {
-        this.organizationName = organizationName;
+    public OrganizationDTO(String name, String description, String organization) {
+        super(organization);
+        this.name = name;
+        this.description = description;
     }
 }
 

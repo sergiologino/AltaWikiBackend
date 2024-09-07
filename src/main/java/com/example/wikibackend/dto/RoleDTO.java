@@ -5,23 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RoleDTO {
-    private String name;
-
-    // Конструкторы, геттеры и сеттеры
+public class RoleDTO extends BaseDTO {
+    private String roleName;
 
     public RoleDTO() {}
 
-    public RoleDTO(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public RoleDTO(String roleName, String organization) {
+        super(organization);
+        this.roleName = roleName;
     }
 }
 
