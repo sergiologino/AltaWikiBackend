@@ -16,5 +16,12 @@ public class OrganizationDTO extends BaseDTO {
         this.name = name;
         this.description = description;
     }
+    public String getOrganizationName() {
+        return name;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.name = organizationName;
+    }
 }
 
