@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -62,7 +63,7 @@ public class DocumentController {
                     @ApiResponse(responseCode = "404", description = "Документ не найден")
             })
     @PutMapping("/{id}")
-    public ResponseEntity<Document> updateDocument(@PathVariable Long id, @RequestBody DocumentDTO documentDTO) {
+    public ResponseEntity<Document> updateDocument(@PathVariable UUID id, @RequestBody DocumentDTO documentDTO) {
         Document updatedDocument = documentService.updateDocument(id, documentDTO);
         return ResponseEntity.ok(updatedDocument);
     }
