@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -41,7 +42,7 @@ public class UserService {
         return userRepository.findAllByDeletedFalse();
     }
 
-    public boolean deleteUser(Long id) {
+    public boolean deleteUser(UUID id) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();

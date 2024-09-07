@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -82,7 +83,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Пользователь не найден")
             })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
         boolean isDeleted = userService.deleteUser(id);
         if (isDeleted) {
             return ResponseEntity.ok("Пользователь успешно помечен как удаленный");
