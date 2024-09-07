@@ -1,53 +1,19 @@
 package com.example.wikibackend.dto;
 
-public class UserDTO {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class UserDTO extends BaseDTO {
     private String username;
-    private String password;
     private String email;
-
-    private Long organizationId;
-
-    // Конструкторы, геттеры и сеттеры
 
     public UserDTO() {}
 
-    public UserDTO(String username, String password, String email, Long organizationId) {
+    public UserDTO(String username, String email, String organization) {
+        super(organization);
         this.username = username;
-        this.password = password;
         this.email = email;
-        this.organizationId= organizationId;
-
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
     }
 }

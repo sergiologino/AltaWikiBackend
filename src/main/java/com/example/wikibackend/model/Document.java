@@ -3,14 +3,15 @@ package com.example.wikibackend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "documents")
 public class Document {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id = UUID.randomUUID(); // Генерация UUID на стороне Java
 
     @Column(nullable = false)
     private String title;
@@ -50,11 +51,11 @@ public class Document {
         this.space = space;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
