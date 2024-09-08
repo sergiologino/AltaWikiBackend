@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/access")
@@ -56,7 +57,7 @@ public class UserSpaceAccessController {
                             content = @Content(schema = @Schema(implementation = UserSpaceAccess.class)))
             })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserSpaceAccess>> getUserSpaceAccesses(@PathVariable Long userId) {
+    public ResponseEntity<List<UserSpaceAccess>> getUserSpaceAccesses(@PathVariable UUID userId) {
         return ResponseEntity.ok(userSpaceAccessService.getUserSpaceAccesses(userId));
     }
 
@@ -66,7 +67,7 @@ public class UserSpaceAccessController {
                             content = @Content(schema = @Schema(implementation = UserSpaceAccess.class)))
             })
     @GetMapping("/space/{spaceId}")
-    public ResponseEntity<List<UserSpaceAccess>> getSpaceUsers(@PathVariable Long spaceId) {
+    public ResponseEntity<List<UserSpaceAccess>> getSpaceUsers(@PathVariable UUID spaceId) {
         return ResponseEntity.ok(userSpaceAccessService.getSpaceUsers(spaceId));
     }
 }

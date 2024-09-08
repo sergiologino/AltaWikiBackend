@@ -1,9 +1,11 @@
+-- Создание расширения для генерации UUID
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- Создание схемы template_schema
 CREATE SCHEMA IF NOT EXISTS template_schema;
 
 -- Таблица пользователей
 CREATE TABLE template_schema.users (
-                                       id SERIAL PRIMARY KEY,
+                                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                        username VARCHAR(255) UNIQUE NOT NULL,
                                        email VARCHAR(255) UNIQUE NOT NULL,
                                        password VARCHAR(255) NOT NULL,
@@ -13,7 +15,7 @@ CREATE TABLE template_schema.users (
 
 -- Таблица ролей
 CREATE TABLE template_schema.roles (
-                                       id SERIAL PRIMARY KEY,
+                                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                        role_name VARCHAR(255) UNIQUE NOT NULL
 );
 
@@ -28,7 +30,7 @@ CREATE TABLE template_schema.user_roles (
 
 -- Таблица разделов
 CREATE TABLE template_schema.spaces (
-                                          id SERIAL PRIMARY KEY,
+                                          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                           name VARCHAR(255) NOT NULL,
                                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                           author_id INT NOT NULL,
@@ -37,7 +39,7 @@ CREATE TABLE template_schema.spaces (
 
 -- Таблица документов
 CREATE TABLE template_schema.documents (
-                                           id SERIAL PRIMARY KEY,
+                                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                            title VARCHAR(255) NOT NULL,
                                            status VARCHAR(50) NOT NULL,
                                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -49,6 +51,15 @@ CREATE TABLE template_schema.documents (
                                            CONSTRAINT fk_section FOREIGN KEY(section_id) REFERENCES template_schema.spaces(id),
                                            CONSTRAINT fk_parent FOREIGN KEY(parent_id) REFERENCES template_schema.documents(id)
 );
+
+-- Таблица доступа к пространствам (user_space_access)
+CREATE TABLE template_schema.user_space_access (
+                                                   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                                                   user_id UUID NOT NULL REFERENCES template_schema.users(id) ON DELETE CASCADE,
+                                                   space_id UUID NOT NULL REFERENCES template_schema.spaces(id) ON DELETE CASCADE,
+                                                   access_type VARCHAR(50) NOT NULL CHECK (access_type IN ('READ', 'WRITE', 'ADMIN'))
+);
+
 
 
 
@@ -71,6 +82,24 @@ CREATE INDEX idx_sections_author_id ON template_schema.spaces(author_id);
 -- Индексы для таблицы связей пользователей и ролей
 CREATE INDEX idx_user_roles_user_id ON template_schema.user_roles(user_id);
 CREATE INDEX idx_user_roles_role_id ON template_schema.user_roles(role_id);
+
+-- Индексы для таблицы user_space_access
+
+-- Индекс для быстрого поиска по user_id
+CREATE INDEX idx_user_space_access_user_id
+    ON template_schema.user_space_access (user_id);
+
+-- Индекс для быстрого поиска по space_id
+CREATE INDEX idx_user_space_access_space_id
+    ON template_schema.user_space_access (space_id);
+
+-- Композитный индекс для ускорения поиска по комбинации user_id и space_id
+CREATE INDEX idx_user_space_access_user_space
+    ON template_schema.user_space_access (user_id, space_id);
+
+-- Индекс для быстрого поиска по access_type (если запросы по этому полю будут частыми)
+CREATE INDEX idx_user_space_access_type
+    ON template_schema.user_space_access (access_type);
 
 -- Уникальные ключи для таблицы пользователей и ролей
 ALTER TABLE template_schema.users ADD CONSTRAINT unique_username UNIQUE (username);

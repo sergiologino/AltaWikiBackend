@@ -1,31 +1,33 @@
 package com.example.wikibackend.dto;
 
+import java.util.UUID;
+
 public class UserRoleDTO {
-    private Long userId;
-    private Long roleId;
+    private UUID userId;
+    private UUID roleId;
 
     // Конструкторы, геттеры и сеттеры
 
     public UserRoleDTO() {}
 
-    public UserRoleDTO(Long userId, Long roleId) {
+    public UserRoleDTO(UUID userId, UUID roleId) {
         this.userId = userId;
         this.roleId = roleId;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public Long getRoleId() {
+    public UUID getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
+    public void setRoleId(UUID roleId) {
         this.roleId = roleId;
     }
 }

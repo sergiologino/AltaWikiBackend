@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserRoleService {
@@ -21,7 +22,7 @@ public class UserRoleService {
         this.roleRepository = roleRepository;
     }
 
-    public boolean assignRoleToUser(Long userId, Long roleId) {
+    public boolean assignRoleToUser(UUID userId, UUID roleId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Role> roleOptional = roleRepository.findById(roleId);
 
@@ -36,7 +37,7 @@ public class UserRoleService {
         return false;
     }
 
-    public boolean removeRoleFromUser(Long userId, Long roleId) {
+    public boolean removeRoleFromUser(UUID userId, UUID roleId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Role> roleOptional = roleRepository.findById(roleId);
 
@@ -51,7 +52,7 @@ public class UserRoleService {
         return false;
     }
 
-    public boolean changeUserRole(Long userId, Long roleId) {
+    public boolean changeUserRole(UUID userId, UUID roleId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Role> roleOptional = roleRepository.findById(roleId);
 

@@ -2,35 +2,37 @@ package com.example.wikibackend.dto;
 
 import com.example.wikibackend.model.AccessType;
 
+import java.util.UUID;
+
 public class UserSpaceAccessDTO {
 
-    private Long userId;
-    private Long spaceId;
+    private UUID userId;
+    private UUID spaceId;
     private AccessType accessType;
 
     // Конструкторы, геттеры и сеттеры
 
     public UserSpaceAccessDTO() {}
 
-    public UserSpaceAccessDTO(Long userId, Long spaceId, AccessType accessType) {
+    public UserSpaceAccessDTO(UUID userId, UUID spaceId, AccessType accessType) {
         this.userId = userId;
         this.spaceId = spaceId;
         this.accessType = accessType;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public Long getSpaceId() {
+    public UUID getSpaceId() {
         return spaceId;
     }
 
-    public void setSpaceId(Long spaceId) {
+    public void setSpaceId(UUID spaceId) {
         this.spaceId = spaceId;
     }
 

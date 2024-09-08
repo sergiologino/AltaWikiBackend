@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserSpaceAccessService {
@@ -46,7 +47,7 @@ public class UserSpaceAccessService {
     }
 
     // Получение по пользователю списка доступных ему разделов
-    public List<UserSpaceAccess> getUserSpaceAccesses(Long userId) {
+    public List<UserSpaceAccess> getUserSpaceAccesses(UUID userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             return userSpaceAccessRepository.findByUser(user.get());
@@ -56,7 +57,7 @@ public class UserSpaceAccessService {
     }
 
     // Получение по ID раздела списка пользователей, которым он доступен
-    public List<UserSpaceAccess> getSpaceUsers(Long spaceId) {
+    public List<UserSpaceAccess> getSpaceUsers(UUID spaceId) {
         Optional<Space> space = spaceRepository.findById(spaceId);
         if (space.isPresent()) {
             return userSpaceAccessRepository.findBySpace(space.get());
