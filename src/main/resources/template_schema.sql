@@ -21,8 +21,8 @@ CREATE TABLE template_schema.roles (
 
 -- Таблица связей пользователей и ролей
 CREATE TABLE template_schema.user_roles (
-                                            user_id INT NOT NULL,
-                                            role_id INT NOT NULL,
+                                            user_id UUID NOT NULL,
+                                            role_id UUID NOT NULL,
                                             CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES template_schema.users(id),
                                             CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES template_schema.roles(id),
                                             PRIMARY KEY (user_id, role_id)
@@ -33,7 +33,7 @@ CREATE TABLE template_schema.spaces (
                                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                           name VARCHAR(255) NOT NULL,
                                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                          author_id INT NOT NULL,
+                                          author_id UUID NOT NULL,
                                           CONSTRAINT fk_space_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id)
 );
 
@@ -44,11 +44,11 @@ CREATE TABLE template_schema.documents (
                                            status VARCHAR(50) NOT NULL,
                                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                            last_modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                           author_id INT NOT NULL,
-                                           section_id INT,
-                                           parent_id INT,
+                                           author_id UUID NOT NULL,
+                                           space_id UUID,
+                                           parent_id UUID,
                                            CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id),
-                                           CONSTRAINT fk_section FOREIGN KEY(section_id) REFERENCES template_schema.spaces(id),
+                                           CONSTRAINT fk_section FOREIGN KEY(space_id) REFERENCES template_schema.spaces(id),
                                            CONSTRAINT fk_parent FOREIGN KEY(parent_id) REFERENCES template_schema.documents(id)
 );
 

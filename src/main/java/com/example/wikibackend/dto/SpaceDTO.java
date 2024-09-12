@@ -3,17 +3,19 @@ package com.example.wikibackend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class SpaceDTO extends BaseDTO {
     private String spaceName;
     private String description;
 
-    private String author;
+    private UUID authorId;
 
     public SpaceDTO() {}
 
-    public SpaceDTO(String spaceName, String description, String organization) {
+    public SpaceDTO(String spaceName, String description, Long organization) {
         super(organization);
         this.spaceName = spaceName;
         this.description = description;
@@ -26,11 +28,11 @@ public class SpaceDTO extends BaseDTO {
         this.spaceName = name;
     }
 
-    public String getAuthor() {
-        return author;
+    public UUID getAuthor() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(UUID authorId) {
+        this.authorId = authorId;
     }
 }

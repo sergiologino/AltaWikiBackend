@@ -5,23 +5,28 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrganizationDTO extends BaseDTO {
-    private String name;
-    private String description;
-
+public class OrganizationDTO {
+    private String organization;
+    private String alias;
     public OrganizationDTO() {}
 
-    public OrganizationDTO(String name, String description, String organization) {
-        super(organization);
-        this.name = name;
-        this.description = description;
+    public OrganizationDTO(String organization) {
+        this.organization=organization;
+        //this.description = description;
     }
-    public String getOrganizationName() {
-        return name;
+    public void setOrganization(String organization) {
+        this.organization=organization;
+    }
+    public String getOrganization() {
+        return organization;
     }
 
-    public void setOrganizationName(String organizationName) {
-        this.name = organizationName;
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 }
 

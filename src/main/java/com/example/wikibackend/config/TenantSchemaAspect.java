@@ -19,9 +19,9 @@ public class TenantSchemaAspect {
 
     @Before("execution(* com.example.wikibackend.service.*.*(..))")
     public void setSchemaForOrganization() {
-        UUID organizationId = TenantContext.getCurrentTenant();
-        if (organizationId != null) {
-            String schemaName = "alt_" + organizationId + "_data";
+        Long alias = TenantContext.getCurrentTenant();
+        if (alias != null) {
+            String schemaName = "alt_" + alias;
             jdbcTemplate.execute("SET search_path TO " + schemaName);
         }
     }

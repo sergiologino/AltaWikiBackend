@@ -26,7 +26,7 @@ public class OrganizationController {
             })
     @PostMapping("/register")
     public ResponseEntity<String> registerOrganization(@RequestBody OrganizationDTO organizationDTO) {
-        organizationService.registerOrganization(organizationDTO.getOrganizationName());
+        organizationService.registerOrganization(organizationDTO.getOrganization());
         return ResponseEntity.ok("Организация успешно зарегистрирована");
     }
 }

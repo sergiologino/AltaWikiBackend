@@ -26,7 +26,7 @@ public class RoleService {
 
     public Role addRole(RoleDTO roleDTO) {
         Role role = new Role();
-        role.setName(roleDTO.getName());
+        role.setRole_name(roleDTO.getName());
         return roleRepository.save(role);
     }
 
@@ -34,7 +34,7 @@ public class RoleService {
         Optional<Role> optionalRole = roleRepository.findById(id);
         if (optionalRole.isPresent()) {
             Role role = optionalRole.get();
-            role.setName(roleDTO.getName());
+            role.setRole_name(roleDTO.getName());
             return roleRepository.save(role);
         } else {
             throw new IllegalArgumentException("Role not found");

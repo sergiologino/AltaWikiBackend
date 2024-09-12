@@ -1,16 +1,16 @@
 package com.example.wikibackend.config;
 
-import java.util.UUID;
+
 
 public class TenantContext {
 
-    private static final ThreadLocal<UUID> currentTenant = new ThreadLocal<>();
+    private static final ThreadLocal<Long> currentTenant = new ThreadLocal<>();
 
-    public static void setCurrentTenant(UUID tenantId) {
+    public static void setCurrentTenant(Long tenantId) {
         currentTenant.set(tenantId);
     }
 
-    public static UUID getCurrentTenant() {
+    public static Long getCurrentTenant() {
         return currentTenant.get();
     }
 

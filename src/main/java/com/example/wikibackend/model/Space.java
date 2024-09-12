@@ -19,17 +19,17 @@ public class Space {
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private String author;
+    private UUID authorId;
 
     // Конструкторы, геттеры и сеттеры
 
     public Space() {
     }
 
-    public Space(String name, LocalDateTime createdAt, String author) {
+    public Space(String name, LocalDateTime createdAt, UUID authorId) {
         this.name = name;
         this.createdAt = createdAt;
-        this.author = author;
+        this.authorId = authorId;
     }
 
     public UUID getId() {
@@ -56,12 +56,12 @@ public class Space {
         this.createdAt = createdAt;
     }
 
-    public String getAuthor() {
-        return author;
+    public UUID getAuthor() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(UUID authorId) {
+        this.authorId = authorId;
     }
 }
 

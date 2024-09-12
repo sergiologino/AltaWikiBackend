@@ -27,7 +27,7 @@ public class Document {
     private LocalDateTime lastModifiedAt;
 
     @Column(nullable = false)
-    private String author;
+    private UUID authorId;
 
     @ManyToOne
     @JoinColumn(name = "space_id", nullable = false)
@@ -42,12 +42,12 @@ public class Document {
     public Document() {
     }
 
-    public Document(String title, DocumentStatus status, LocalDateTime createdAt, LocalDateTime lastModifiedAt, String author, Space space) {
+    public Document(String title, DocumentStatus status, LocalDateTime createdAt, LocalDateTime lastModifiedAt, UUID authorId, Space space) {
         this.title = title;
         this.status = status;
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;
-        this.author = author;
+        this.authorId = authorId;
         this.space = space;
     }
 
@@ -91,12 +91,12 @@ public class Document {
         this.lastModifiedAt = lastModifiedAt;
     }
 
-    public String getAuthor() {
-        return author;
+    public UUID getAuthor() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(UUID author) {
+        this.authorId = authorId;
     }
 
     public Space getSpace() {

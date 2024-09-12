@@ -12,14 +12,34 @@ import java.util.UUID;
 @Table(name = "roles")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue
     private UUID id = UUID.randomUUID();
 
-    private String name;
+    private String role_name;
 
-    // геттеры и сеттеры
+    public UUID getId() {
+        return id;
+    }
+
+    public String getRole_name() {
+        return role_name;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setRole_name(String role_name) {
+        this.role_name = role_name;
+    }
+
+    public Role(UUID id, String role_name) {
+        this.id = id;
+        this.role_name = role_name;
+    }
+
+    public Role() {
+    }
 }

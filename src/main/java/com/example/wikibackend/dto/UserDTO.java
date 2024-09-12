@@ -12,12 +12,11 @@ public class UserDTO extends BaseDTO {
     private String password;
     private String email;
 
-    private UUID organizationId;
 
     public UserDTO() {}
 
-    public UserDTO(String username, String email, String organization) {
-        super(organization);
+    public UserDTO(String username, String email, Long organizationId) {
+        super(organizationId);
         this.username = username;
         this.email = email;
     }
@@ -45,11 +44,12 @@ public class UserDTO extends BaseDTO {
         this.email = email;
     }
 
-    public UUID getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(UUID organizationId) {
-        this.organizationId = organizationId;
-    }
+//    public String getOrganizationAlias() {
+//        return getOrganizationAlias();
+//    }
+//
+//    public void setOrganizationAlias(String organizationAlias) {
+//
+//        setOrganizationAlias(organizationAlias);
+//    }
 }

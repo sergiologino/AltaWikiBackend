@@ -3,6 +3,8 @@ package com.example.wikibackend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class RoleDTO extends BaseDTO {
@@ -10,7 +12,7 @@ public class RoleDTO extends BaseDTO {
 
     public RoleDTO() {}
 
-    public RoleDTO(String roleName, String organization) {
+    public RoleDTO(String roleName, Long organization) {
         super(organization);
         this.roleName = roleName;
     }

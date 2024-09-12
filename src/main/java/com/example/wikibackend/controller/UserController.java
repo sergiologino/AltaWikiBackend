@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
         // Устанавливаем organizationId в TenantContext
-        TenantContext.setCurrentTenant(userDTO.getOrganizationId());
+        TenantContext.setCurrentTenant(userDTO.getOrganization());
         User user = userService.addUser(userDTO);
         // Очищаем контекст после выполнения операции
         TenantContext.clear();
