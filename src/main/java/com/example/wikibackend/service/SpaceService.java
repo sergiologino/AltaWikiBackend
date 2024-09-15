@@ -28,7 +28,7 @@ public class SpaceService {
     public Space addSpace(SpaceDTO spaceDTO) {
         Space space = new Space();
         space.setName(spaceDTO.getName());
-        space.setAuthor(spaceDTO.getAuthor());
+        space.setAuthor(spaceDTO.getAuthorId());
         space.setCreatedAt(LocalDateTime.now());
         return spaceRepository.save(space);
     }
@@ -38,7 +38,7 @@ public class SpaceService {
         if (optionalSpace.isPresent()) {
             Space space = optionalSpace.get();
             space.setName(spaceDTO.getName());
-            space.setAuthor(spaceDTO.getAuthor());
+            space.setAuthor(spaceDTO.getAuthorId());
             return spaceRepository.save(space);
         } else {
             throw new IllegalArgumentException("Space not found");

@@ -1,27 +1,35 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.config.TenantContext;
+import com.example.wikibackend.model.Organization;
+import com.example.wikibackend.repository.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class OrganizationService {
 
     private final JdbcTemplate jdbcTemplate;
+    private static OrganizationRepository organizationRepository;
 
     @Autowired
-    public OrganizationService(JdbcTemplate jdbcTemplate) {
+    public OrganizationService(JdbcTemplate jdbcTemplate, OrganizationRepository organizationRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.organizationRepository = organizationRepository;
     }
 
-    public void registerOrganization(String name) {
-        String insertOrganizationSql = "INSERT INTO admin.organizations (name) VALUES (?) RETURNING alias";
-        String prefix = jdbcTemplate.queryForObject(insertOrganizationSql, new Object[]{name}, String.class);
-
+    public Organization registerOrganization(Organization organization) {
+        organizationRepository.save(organization);
+        Long prefix = organizationRepository.findByName(organization.getName()).get().getAlias();
+        TenantContext.setCurrentTenant(organization.getId()); //добавил текущую организацию
         String schemaName = "alt_" + prefix;
         createSchema(schemaName);
         //copySchemaStructure("template_schema", schemaName);
         cloneSchema(schemaName);
+        return organization;
     }
 
     private void createSchema(String schemaName) {
@@ -48,6 +56,9 @@ public class OrganizationService {
                 + "END $body$;";
 
         jdbcTemplate.execute(sql);
+    }
+    public static Organization getOrganizationById(UUID id) {
+        return organizationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Organization not found"));
     }
 
 

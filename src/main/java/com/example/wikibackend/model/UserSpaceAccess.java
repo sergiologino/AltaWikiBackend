@@ -2,13 +2,15 @@ package com.example.wikibackend.model;
 
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "user_space_access")
 public class UserSpaceAccess {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -34,11 +36,11 @@ public class UserSpaceAccess {
 
     // Геттеры и сеттеры
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -1,5 +1,6 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
 import com.example.wikibackend.service.DocumentService;
@@ -40,7 +41,7 @@ public class DocumentController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = DocumentDTO.class),
-                            examples = @ExampleObject(value = "{\"title\": \"Документ 1\", \"status\": \"ACTIVE\", \"author\": \"Автор\", \"spaceId\": 1, \"parentId\": null}"))),
+                            examples = @ExampleObject(value = "{\"title\": \"Документ 1\", \"status\": \"ACTIVE\", \"authorId\": \"f4b505c8-d879-471c-a461-195c152a7abf\", \"spaceId\": 1, \"parentId\": null}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Документ успешно добавлен",
                             content = @Content(schema = @Schema(implementation = Document.class))),
@@ -48,7 +49,9 @@ public class DocumentController {
             })
     @PostMapping
     public ResponseEntity<Document> addDocument(@RequestBody DocumentDTO documentDTO) {
+        TenantContext.setCurrentTenant(documentDTO.getOrganizationId());
         Document document = documentService.addDocument(documentDTO);
+
         return ResponseEntity.status(201).body(document);
     }
 

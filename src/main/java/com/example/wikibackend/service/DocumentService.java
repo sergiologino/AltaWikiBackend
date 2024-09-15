@@ -33,7 +33,7 @@ public class DocumentService {
         Document document = new Document();
         document.setTitle(documentDTO.getTitle());
         document.setStatus(documentDTO.getStatus());
-        document.setAuthor(documentDTO.getAuthor());
+        document.setAuthor(documentDTO.getAuthorId());
         document.setCreatedAt(LocalDateTime.now());
         document.setLastModifiedAt(LocalDateTime.now());
 
@@ -54,7 +54,7 @@ public class DocumentService {
             Document document = optionalDocument.get();
             document.setTitle(documentDTO.getTitle());
             document.setStatus(documentDTO.getStatus());
-            document.setAuthor(documentDTO.getAuthor());
+            document.setAuthor(documentDTO.getAuthorId());
             document.setLastModifiedAt(LocalDateTime.now());
 
             Optional<Space> space = spaceRepository.findById(documentDTO.getSpaceId());

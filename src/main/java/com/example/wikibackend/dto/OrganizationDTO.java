@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class OrganizationDTO {
     private String organization;
-    private String alias;
+    private Long alias;
     public OrganizationDTO() {}
 
     public OrganizationDTO(String organization) {
@@ -21,11 +21,11 @@ public class OrganizationDTO {
         return organization;
     }
 
-    public String getAlias() {
+    public Long getAlias() {
         return alias;
     }
 
-    public void setAlias(String alias) {
+    public void setAlias(Long alias) {
         this.alias = alias;
     }
 }

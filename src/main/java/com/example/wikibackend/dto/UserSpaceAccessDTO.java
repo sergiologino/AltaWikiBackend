@@ -4,7 +4,7 @@ import com.example.wikibackend.model.AccessType;
 
 import java.util.UUID;
 
-public class UserSpaceAccessDTO {
+public class UserSpaceAccessDTO extends BaseDTO{
 
     private UUID userId;
     private UUID spaceId;
@@ -14,7 +14,8 @@ public class UserSpaceAccessDTO {
 
     public UserSpaceAccessDTO() {}
 
-    public UserSpaceAccessDTO(UUID userId, UUID spaceId, AccessType accessType) {
+    public UserSpaceAccessDTO(UUID userId, UUID spaceId, AccessType accessType, UUID organization) {
+        super(organization);
         this.userId = userId;
         this.spaceId = spaceId;
         this.accessType = accessType;

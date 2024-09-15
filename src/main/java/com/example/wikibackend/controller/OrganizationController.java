@@ -1,6 +1,8 @@
 package com.example.wikibackend.controller;
 
 import com.example.wikibackend.dto.OrganizationDTO;
+import com.example.wikibackend.mapper.OrganizationMapper;
+import com.example.wikibackend.model.Organization;
 import com.example.wikibackend.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +28,9 @@ public class OrganizationController {
             })
     @PostMapping("/register")
     public ResponseEntity<String> registerOrganization(@RequestBody OrganizationDTO organizationDTO) {
-        organizationService.registerOrganization(organizationDTO.getOrganization());
+        OrganizationMapper newOrgMap = new OrganizationMapper();
+        Organization entityOrg= newOrgMap.toEntity(organizationDTO);
+        Organization createdOrganization = organizationService.registerOrganization(entityOrg);
         return ResponseEntity.ok("Организация успешно зарегистрирована");
     }
 }

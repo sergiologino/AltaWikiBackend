@@ -12,7 +12,7 @@ public class RoleDTO extends BaseDTO {
 
     public RoleDTO() {}
 
-    public RoleDTO(String roleName, Long organization) {
+    public RoleDTO(String roleName, UUID organization) {
         super(organization);
         this.roleName = roleName;
     }

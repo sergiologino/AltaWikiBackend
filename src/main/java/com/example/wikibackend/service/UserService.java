@@ -3,7 +3,9 @@ package com.example.wikibackend.service;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.model.User;
 import com.example.wikibackend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,13 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -30,7 +34,7 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setEnabled(true);
         user.setDeleted(false);  // Устанавливаем значение false по умолчанию
-        return userRepository.save(user);
+        return userRepository.save(user); // Сохраняем пользователя и получаем его ID
     }
 
     public boolean authenticateUser(String username, String password) {
@@ -52,4 +56,5 @@ public class UserService {
         }
         return false;
     }
+
 }

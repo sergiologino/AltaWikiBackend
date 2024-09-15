@@ -15,8 +15,8 @@ public class SpaceDTO extends BaseDTO {
 
     public SpaceDTO() {}
 
-    public SpaceDTO(String spaceName, String description, Long organization) {
-        super(organization);
+    public SpaceDTO(String spaceName, String description, UUID organizationId) {
+        super(organizationId);
         this.spaceName = spaceName;
         this.description = description;
     }
@@ -28,7 +28,7 @@ public class SpaceDTO extends BaseDTO {
         this.spaceName = name;
     }
 
-    public UUID getAuthor() {
+    public UUID getAuthorId() {
         return authorId;
     }
 

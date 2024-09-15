@@ -18,11 +18,11 @@ public class DocumentDTO extends BaseDTO {
 
     public DocumentDTO() {}
 
-    public DocumentDTO(String title, DocumentStatus status, UUID author, UUID spaceId, UUID parentId, Long organization) {
-        super(organization);
+    public DocumentDTO(String title, DocumentStatus status, UUID authorId, UUID spaceId, UUID parentId, UUID organizationId) {
+        super(organizationId);
         this.title = title;
         this.status = status;
-        this.authorId = author;
+        this.authorId = authorId;
         this.spaceId = spaceId;
         this.parentId = parentId;
     }
@@ -42,11 +42,11 @@ public class DocumentDTO extends BaseDTO {
         this.status = status;
     }
 
-    public UUID getAuthor() {
+    public UUID getAuthorId() {
         return authorId;
     }
 
-    public void setAuthor(UUID authorId) {
+    public void setAuthorId(UUID authorId) {
         this.authorId = authorId;
     }
 

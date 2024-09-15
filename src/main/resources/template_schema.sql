@@ -106,4 +106,13 @@ ALTER TABLE template_schema.users ADD CONSTRAINT unique_username UNIQUE (usernam
 ALTER TABLE template_schema.users ADD CONSTRAINT unique_email UNIQUE (email);
 ALTER TABLE template_schema.roles ADD CONSTRAINT unique_role_name UNIQUE (role_name);
 
--- Триггеры или другие необходимые объекты можно добавить здесь
+-- Приведение ключевых полей к UUID
+ALTER TABLE template_schema.user_roles
+    ALTER COLUMN user_id SET DATA TYPE UUID USING user_id::uuid;
+
+ALTER TABLE template_schema.users
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid;
+
+ALTER TABLE template_schema.roles
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid;
+
