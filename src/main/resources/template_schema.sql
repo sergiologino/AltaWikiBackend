@@ -61,7 +61,31 @@ CREATE TABLE template_schema.user_space_access (
 );
 
 
+-- Приведение ключевых полей к UUID
+ALTER TABLE template_schema.documents
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid,
+    ALTER COLUMN parent_id SET DATA TYPE UUID USING parent_id::uuid,
+    ALTER COLUMN space_id SET DATA TYPE UUID USING space_id::uuid,
+    ALTER COLUMN author_id SET DATA TYPE UUID USING author_id::uuid;
 
+ALTER TABLE template_schema.user_roles
+    ALTER COLUMN user_id SET DATA TYPE UUID USING user_id::uuid,
+    ALTER COLUMN role_id SET DATA TYPE UUID USING user_id::uuid;
+
+ALTER TABLE template_schema.users
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid;
+
+ALTER TABLE template_schema.roles
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid;
+
+ALTER TABLE template_schema.spaces
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid,
+    ALTER COLUMN author_id SET DATA TYPE UUID USING author_id::uuid;
+
+ALTER TABLE template_schema.user_space_access
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid,
+    ALTER COLUMN user_id SET DATA TYPE UUID USING user_id::uuid,
+    ALTER COLUMN space_id SET DATA TYPE UUID USING space_id::uuid;
 
 -- Индексы для таблицы пользователей
 CREATE INDEX idx_users_username ON template_schema.users(username);
@@ -105,14 +129,4 @@ CREATE INDEX idx_user_space_access_type
 ALTER TABLE template_schema.users ADD CONSTRAINT unique_username UNIQUE (username);
 ALTER TABLE template_schema.users ADD CONSTRAINT unique_email UNIQUE (email);
 ALTER TABLE template_schema.roles ADD CONSTRAINT unique_role_name UNIQUE (role_name);
-
--- Приведение ключевых полей к UUID
-ALTER TABLE template_schema.user_roles
-    ALTER COLUMN user_id SET DATA TYPE UUID USING user_id::uuid;
-
-ALTER TABLE template_schema.users
-    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid;
-
-ALTER TABLE template_schema.roles
-    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid;
 

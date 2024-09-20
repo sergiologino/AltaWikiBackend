@@ -11,22 +11,23 @@ public class Document {
 
     @Id
     @GeneratedValue
+    @Column(name = "id",nullable = false)
     private UUID id = UUID.randomUUID(); // Генерация UUID на стороне Java
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private DocumentStatus status;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "last_modified_at",nullable = false)
     private LocalDateTime lastModifiedAt;
 
-    @Column(nullable = false)
+    @Column(name = "author_id",nullable = false)
     private UUID authorId;
 
     @ManyToOne
