@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class OrganizationService {
 
@@ -51,5 +53,8 @@ public class OrganizationService {
     }
 
 
-
+    public Long getAlias(Integer organizationId) {
+        Long Alias = getAlias(organizationId);
+        return Alias;
+    }
 }

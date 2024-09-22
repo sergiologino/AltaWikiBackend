@@ -1,6 +1,7 @@
 package com.example.wikibackend.config;
 
 
+import java.util.UUID;
 
 public class TenantContext {
 

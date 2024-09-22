@@ -4,6 +4,7 @@ import com.example.wikibackend.model.DocumentStatus;
 import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import lombok.Getter;
 import lombok.Setter;
+import org.w3c.dom.Text;
 
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 public class DocumentDTO extends BaseDTO {
     private String title;
     private DocumentStatus status;
+    private Text content;
     private UUID authorId;
     private UUID spaceId;
     private UUID parentId;
@@ -64,5 +66,10 @@ public class DocumentDTO extends BaseDTO {
 
     public void setParentId(UUID parentId) {
         this.parentId = parentId;
+    }
+
+    public CharSequence getContent() { {
+        return content;
+    }
     }
 }
