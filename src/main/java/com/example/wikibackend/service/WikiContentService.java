@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class WikiContentService {
@@ -39,7 +40,7 @@ public class WikiContentService {
     }
 
     // Публикация документа, обновление статусов
-    public WikiContent publishDocument(Long documentId, String version, String author) {
+    public WikiContent publishDocument(UUID documentId, String version, UUID author) {
         // Установить все активные версии как устаревшие
         Optional<WikiContent> activeContent = wikiContentRepository.findByDocumentIdAndStatusAndUserIdIsNull(documentId, DocumentStatus.ACTIVE);
         if (activeContent.isPresent()) {
@@ -64,17 +65,17 @@ public class WikiContentService {
     }
 
     // Получение всех версий документа по его ID
-    public List<WikiContent> getAllVersionsByDocumentId(Long documentId) {
+    public List<WikiContent> getAllVersionsByDocumentId(UUID documentId) {
         return wikiContentRepository.findByDocumentId(documentId);
     }
 
     // Получение текущей активной версии документа по его ID
-    public Optional<WikiContent> getCurrentVersionByDocumentId(Long documentId) {
+    public Optional<WikiContent> getCurrentVersionByDocumentId(UUID documentId) {
         return wikiContentRepository.findByDocumentIdAndStatusAndUserIdIsNull(documentId, DocumentStatus.ACTIVE);
     }
 
     // Получение черновика документа по его ID для конкретного пользователя, если он существует
-    public Optional<WikiContent> getDraftByDocumentIdAndUserId(Long documentId, Long userId) {
+    public Optional<WikiContent> getDraftByDocumentIdAndUserId(UUID documentId, UUID userId) {
         return wikiContentRepository.findByDocumentIdAndStatusAndUserId(documentId, DocumentStatus.DRAFT, userId);
     }
 }

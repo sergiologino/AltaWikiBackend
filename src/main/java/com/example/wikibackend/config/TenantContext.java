@@ -1,6 +1,9 @@
 package com.example.wikibackend.config;
 
 
+import com.example.wikibackend.model.Organization;
+
+import java.util.Optional;
 
 public class TenantContext {
 

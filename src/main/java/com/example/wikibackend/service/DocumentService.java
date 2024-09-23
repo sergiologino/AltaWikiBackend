@@ -2,74 +2,74 @@ package com.example.wikibackend.service;
 
 import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
-import com.example.wikibackend.model.Space;
+import com.example.wikibackend.model.mongodb.WikiContent;
 import com.example.wikibackend.repository.DocumentRepository;
-import com.example.wikibackend.repository.SpaceRepository;
+import com.example.wikibackend.repository.mongodb.WikiContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
-    private final SpaceRepository spaceRepository;
+    private final WikiContentRepository wikiContentRepository;
+    private final WikiContentService wikiContentService;
 
     @Autowired
-    public DocumentService(DocumentRepository documentRepository, SpaceRepository spaceRepository) {
+    public DocumentService(DocumentRepository documentRepository, WikiContentRepository wikiContentRepository, WikiContentService wikiContentService) {
         this.documentRepository = documentRepository;
-        this.spaceRepository = spaceRepository;
+        this.wikiContentRepository = wikiContentRepository;
+        this.wikiContentService = wikiContentService;
+    }
+
+    public Document createDocument(DocumentDTO documentDTO) {
+        Document document = new Document();
+        document.setTitle(documentDTO.getTitle());
+        document.setAuthor(documentDTO.getAuthorId());
+        // Сохранение основного документа в реляционной БД
+        document = documentRepository.save(document);
+
+        // Создание и сохранение содержимого документа в MongoDB
+        WikiContent wikiContent = new WikiContent();
+        wikiContent.setDocumentId(document.getId());
+        wikiContent.setContent(documentDTO.getContent());
+        wikiContentRepository.save(wikiContent);
+
+        return document;
+    }
+
+    public Document updateDocument(UUID id, DocumentDTO documentDTO) {
+        Document document = documentRepository.findById(id).orElseThrow(() -> new RuntimeException("Документ не найден"));
+        document.setTitle(documentDTO.getTitle());
+        document.setAuthor(documentDTO.getAuthorId());
+
+        // Обновление основного документа в реляционной БД
+        document = documentRepository.save(document);
+
+        // Обновление содержимого документа в MongoDB
+        WikiContent wikiContent = wikiContentRepository.findByDocumentId(id).stream().findFirst()
+                .orElse(new WikiContent()); // Создаем новый, если не существует
+        wikiContent.setDocumentId(document.getId());
+        wikiContent.setContent(documentDTO.getContent());
+        wikiContentRepository.save(wikiContent);
+
+        return document;
+    }
+
+    public boolean deleteDocument(UUID id) {
+        documentRepository.deleteById(id);
+        //wikiContentRepository.deleteByDocumentId(id);// установить деактуализацию вместо удаления
+        return true;
     }
 
     public List<Document> getAllDocuments() {
         return documentRepository.findAll();
     }
 
-    public Document addDocument(DocumentDTO documentDTO) {
-        Document document = new Document();
-        document.setTitle(documentDTO.getTitle());
-        document.setStatus(documentDTO.getStatus());
-        document.setAuthor(documentDTO.getAuthor());
-        document.setCreatedAt(LocalDateTime.now());
-        document.setLastModifiedAt(LocalDateTime.now());
-
-        Optional<Space> space = spaceRepository.findById(documentDTO.getSpaceId());
-        space.ifPresent(document::setSpace);
-
-        if (documentDTO.getParentId() != null) {
-            Optional<Document> parent = documentRepository.findById(documentDTO.getParentId());
-            parent.ifPresent(document::setParent);
-        }
-
-        return documentRepository.save(document);
-    }
-
-    public Document updateDocument(UUID id, DocumentDTO documentDTO) {
-        Optional<Document> optionalDocument = documentRepository.findById(id);
-        if (optionalDocument.isPresent()) {
-            Document document = optionalDocument.get();
-            document.setTitle(documentDTO.getTitle());
-            document.setStatus(documentDTO.getStatus());
-            document.setAuthor(documentDTO.getAuthor());
-            document.setLastModifiedAt(LocalDateTime.now());
-
-            Optional<Space> space = spaceRepository.findById(documentDTO.getSpaceId());
-            space.ifPresent(document::setSpace);
-
-            if (documentDTO.getParentId() != null) {
-                Optional<Document> parent = documentRepository.findById(documentDTO.getParentId());
-                parent.ifPresent(document::setParent);
-            } else {
-                document.setParent(null);
-            }
-
-            return documentRepository.save(document);
-        } else {
-            throw new IllegalArgumentException("Document not found");
-        }
+    public Document getDocumentById(UUID id) {
+        return documentRepository.findById(id).orElse(null);
     }
 }

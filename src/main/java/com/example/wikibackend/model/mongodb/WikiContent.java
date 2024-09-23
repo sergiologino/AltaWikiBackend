@@ -3,8 +3,10 @@ package com.example.wikibackend.model.mongodb;
 import com.example.wikibackend.model.DocumentStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Document(collection = "wiki_content")
 public class WikiContent {
@@ -12,19 +14,19 @@ public class WikiContent {
     @Id
     private String id;
 
-    private Long documentId; // ID документа из PostgreSQL
-    private String content; // Содержимое документа
+    private UUID documentId; // ID документа из PostgreSQL
+    private Text content; // Содержимое документа
     private String version; // Версия документа (например, "v1.0", "v1.1")
     private DocumentStatus status; // Статус документа: DRAFT, ACTIVE, OUTDATED
     private LocalDateTime createdAt; // Дата создания версии
-    private String author; // Автор версии
-    private Long userId; // ID пользователя, если это черновик
+    private UUID author; // Автор версии
+    private UUID userId; // ID пользователя, если это черновик
 
     // Конструкторы, геттеры и сеттеры
 
     public WikiContent() {}
 
-    public WikiContent(Long documentId, String content, String version, DocumentStatus status, LocalDateTime createdAt, String author, Long userId) {
+    public WikiContent(UUID documentId, Text content, String version, DocumentStatus status, LocalDateTime createdAt, UUID author, UUID userId) {
         this.documentId = documentId;
         this.content = content;
         this.version = version;
@@ -44,19 +46,19 @@ public class WikiContent {
         this.id = id;
     }
 
-    public Long getDocumentId() {
+    public UUID getDocumentId() {
         return documentId;
     }
 
-    public void setDocumentId(Long documentId) {
+    public void setDocumentId(UUID documentId) {
         this.documentId = documentId;
     }
 
-    public String getContent() {
+    public Text getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Text content) {
         this.content = content;
     }
 
@@ -84,19 +86,19 @@ public class WikiContent {
         this.createdAt = createdAt;
     }
 
-    public String getAuthor() {
+    public UUID getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(UUID author) {
         this.author = author;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 }

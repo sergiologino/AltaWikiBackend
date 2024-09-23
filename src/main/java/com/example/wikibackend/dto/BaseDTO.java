@@ -8,19 +8,19 @@ import java.util.UUID;
 @Getter
 @Setter
 public class BaseDTO {
-    private Long organizationId;
+    private UUID organizationId;
 
     public BaseDTO() {}
 
-    public BaseDTO(Long organizationId) {
+    public BaseDTO(UUID organizationId) {
         this.organizationId = organizationId;
     }
 
-    public Long getOrganization() {
+    public UUID getOrganization() {
         return organizationId;
     }
 
-    public void setOrganization(Long organizationId) {
+    public void setOrganization(UUID organizationId) {
         this.organizationId = organizationId;
     }
 
