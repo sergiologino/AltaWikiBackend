@@ -1,19 +1,24 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.model.Organization;
+import com.example.wikibackend.repository.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class OrganizationService {
 
     private final JdbcTemplate jdbcTemplate;
+    private final OrganizationRepository organizationRepository;
 
     @Autowired
-    public OrganizationService(JdbcTemplate jdbcTemplate) {
+    public OrganizationService(JdbcTemplate jdbcTemplate, OrganizationRepository organizationRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.organizationRepository = organizationRepository;
     }
 
     public void registerOrganization(String name) {
@@ -53,8 +58,16 @@ public class OrganizationService {
     }
 
 
-    public Long getAlias(Integer organizationId) {
-        Long Alias = getAlias(organizationId);
-        return Alias;
+    // Метод для получения alias по UUID organizationId в схеме admin
+    public Long getAlias(UUID organizationId) {
+        // Ищем организацию по ID
+        Optional<Organization> organizationOptional = organizationRepository.findById(organizationId);
+
+        // Если организация найдена, возвращаем alias, иначе выбрасываем исключение
+        if (organizationOptional.isPresent()) {
+            return organizationOptional.get().getAlias(); // Предполагаем, что в Organization есть поле alias
+        } else {
+            throw new RuntimeException("Организация с ID " + organizationId + " не найдена.");
+        }
     }
 }
