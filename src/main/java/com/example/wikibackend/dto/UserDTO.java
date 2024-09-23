@@ -15,7 +15,7 @@ public class UserDTO extends BaseDTO {
 
     public UserDTO() {}
 
-    public UserDTO(String username, String email, Long organizationId) {
+    public UserDTO(String username, String email, UUID organizationId) {
         super(organizationId);
         this.username = username;
         this.email = email;

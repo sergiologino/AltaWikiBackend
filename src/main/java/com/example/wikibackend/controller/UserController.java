@@ -3,6 +3,8 @@ package com.example.wikibackend.controller;
 import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.model.User;
+import com.example.wikibackend.repository.OrganizationRepository;
+import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,10 +23,13 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final OrganizationService organizationService;
+
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, OrganizationService organizationService) {
         this.userService = userService;
+        this.organizationService = organizationService;
     }
 
     @Operation(summary = "Создание нового пользователя",
@@ -40,7 +45,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
         // Устанавливаем organizationId в TenantContext
-        TenantContext.setCurrentTenant(userDTO.getOrganization());
+        Long aliasOrg = organizationService.getAlias(userDTO.getOrganizationId());
+        TenantContext.setCurrentTenant(aliasOrg);
         User user = userService.addUser(userDTO);
         // Очищаем контекст после выполнения операции
         TenantContext.clear();

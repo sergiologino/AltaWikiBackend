@@ -20,7 +20,7 @@ public class DocumentDTO extends BaseDTO {
 
     public DocumentDTO() {}
 
-    public DocumentDTO(String title, DocumentStatus status, UUID author, UUID spaceId, UUID parentId, Long organization) {
+    public DocumentDTO(String title, DocumentStatus status, UUID author, UUID spaceId, UUID parentId, UUID organization) {
         super(organization);
         this.title = title;
         this.status = status;
@@ -68,7 +68,7 @@ public class DocumentDTO extends BaseDTO {
         this.parentId = parentId;
     }
 
-    public CharSequence getContent() { {
+    public Text getContent() { {
         return content;
     }
     }

@@ -41,7 +41,7 @@ public class DocumentController {
                     @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
             })
     @PostMapping
-    public ResponseEntity<?> createDocument(@RequestParam Integer organizationId, @RequestBody DocumentDTO documentDTO) {
+    public ResponseEntity<?> createDocument(@RequestParam UUID organizationId, @RequestBody DocumentDTO documentDTO) {
         if (organizationId == null) {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
@@ -63,7 +63,7 @@ public class DocumentController {
                     @ApiResponse(responseCode = "404", description = "Документ не найден")
             })
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateDocument(@RequestParam Integer organizationId, @PathVariable UUID id, @RequestBody DocumentDTO documentDTO) {
+    public ResponseEntity<?> updateDocument(@RequestParam UUID organizationId, @PathVariable UUID id, @RequestBody DocumentDTO documentDTO) {
         if (organizationId == null) {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
@@ -80,7 +80,7 @@ public class DocumentController {
                     @ApiResponse(responseCode = "404", description = "Документ не найден")
             })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteDocument(@RequestParam Integer organizationId, @PathVariable UUID id) {
+    public ResponseEntity<?> deleteDocument(@RequestParam UUID organizationId, @PathVariable UUID id) {
         if (organizationId == null) {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
@@ -101,7 +101,7 @@ public class DocumentController {
                             content = @Content(schema = @Schema(implementation = Document.class)))
             })
     @GetMapping
-    public ResponseEntity<?> getAllDocuments(@RequestParam Integer organizationId) {
+    public ResponseEntity<?> getAllDocuments(@RequestParam UUID organizationId) {
         if (organizationId == null) {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
@@ -119,7 +119,7 @@ public class DocumentController {
                     @ApiResponse(responseCode = "404", description = "Документ не найден")
             })
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDocumentById(@RequestParam Integer organizationId, @PathVariable UUID id) {
+    public ResponseEntity<?> getDocumentById(@RequestParam UUID organizationId, @PathVariable UUID id) {
         if (organizationId == null) {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }

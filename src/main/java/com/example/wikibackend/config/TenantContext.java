@@ -1,7 +1,9 @@
 package com.example.wikibackend.config;
 
 
-import java.util.UUID;
+import com.example.wikibackend.model.Organization;
+
+import java.util.Optional;
 
 public class TenantContext {
 

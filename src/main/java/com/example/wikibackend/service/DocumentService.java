@@ -16,11 +16,13 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final WikiContentRepository wikiContentRepository;
+    private final WikiContentService wikiContentService;
 
     @Autowired
-    public DocumentService(DocumentRepository documentRepository, WikiContentRepository wikiContentRepository) {
+    public DocumentService(DocumentRepository documentRepository, WikiContentRepository wikiContentRepository, WikiContentService wikiContentService) {
         this.documentRepository = documentRepository;
         this.wikiContentRepository = wikiContentRepository;
+        this.wikiContentService = wikiContentService;
     }
 
     public Document createDocument(DocumentDTO documentDTO) {
@@ -48,7 +50,7 @@ public class DocumentService {
         document = documentRepository.save(document);
 
         // Обновление содержимого документа в MongoDB
-        WikiContent wikiContent = wikiContentRepository.findByDocumentId(id)
+        WikiContent wikiContent = wikiContentRepository.findByDocumentId(id).stream().findFirst()
                 .orElse(new WikiContent()); // Создаем новый, если не существует
         wikiContent.setDocumentId(document.getId());
         wikiContent.setContent(documentDTO.getContent());
@@ -59,7 +61,7 @@ public class DocumentService {
 
     public boolean deleteDocument(UUID id) {
         documentRepository.deleteById(id);
-        wikiContentRepository.deleteByDocumentId(id);
+        //wikiContentRepository.deleteByDocumentId(id);// установить деактуализацию вместо удаления
         return true;
     }
 

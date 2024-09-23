@@ -19,14 +19,14 @@ public class WikiContent {
     private String version; // Версия документа (например, "v1.0", "v1.1")
     private DocumentStatus status; // Статус документа: DRAFT, ACTIVE, OUTDATED
     private LocalDateTime createdAt; // Дата создания версии
-    private String author; // Автор версии
-    private Long userId; // ID пользователя, если это черновик
+    private UUID author; // Автор версии
+    private UUID userId; // ID пользователя, если это черновик
 
     // Конструкторы, геттеры и сеттеры
 
     public WikiContent() {}
 
-    public WikiContent(UUID documentId, Text content, String version, DocumentStatus status, LocalDateTime createdAt, String author, Long userId) {
+    public WikiContent(UUID documentId, Text content, String version, DocumentStatus status, LocalDateTime createdAt, UUID author, UUID userId) {
         this.documentId = documentId;
         this.content = content;
         this.version = version;
@@ -86,19 +86,19 @@ public class WikiContent {
         this.createdAt = createdAt;
     }
 
-    public String getAuthor() {
+    public UUID getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(UUID author) {
         this.author = author;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 }
