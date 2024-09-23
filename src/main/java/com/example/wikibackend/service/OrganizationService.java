@@ -21,7 +21,8 @@ public class OrganizationService {
         this.organizationRepository = organizationRepository;
     }
 
-    public void registerOrganization(String name) {
+    public Organization registerOrganization(Organization organization) {
+        String name = organization.getName();
         String insertOrganizationSql = "INSERT INTO admin.organizations (name) VALUES (?) RETURNING alias";
         String prefix = jdbcTemplate.queryForObject(insertOrganizationSql, new Object[]{name}, String.class);
 
