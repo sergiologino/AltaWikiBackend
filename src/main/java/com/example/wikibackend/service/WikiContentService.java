@@ -40,7 +40,7 @@ public class WikiContentService {
     }
 
     // Публикация документа, обновление статусов
-    public WikiContent publishDocument(UUID documentId, String version, String author) {
+    public WikiContent publishDocument(UUID documentId, String version, UUID author) {
         // Установить все активные версии как устаревшие
         Optional<WikiContent> activeContent = wikiContentRepository.findByDocumentIdAndStatusAndUserIdIsNull(documentId, DocumentStatus.ACTIVE);
         if (activeContent.isPresent()) {

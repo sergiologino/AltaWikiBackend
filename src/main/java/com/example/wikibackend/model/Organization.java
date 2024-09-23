@@ -8,26 +8,15 @@ import java.util.UUID;
 public class Organization {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue
+    private UUID id; // Идентификатор организации (UUID)
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    private String name; // Название организации
 
-    @Column(name = "alias", nullable = false)
-    private Long alias;
-        // Другие поля
+    private Long alias; // Алиас организации (долгий идентификатор)
 
-    // Конструкторы
-    public Organization() {
-    }
+    // Геттеры и сеттеры для всех полей
 
-    public Organization(String name) {
-        this.name = name;
-
-    }
-
-    // Геттеры и сеттеры
     public UUID getId() {
         return id;
     }
@@ -51,6 +40,4 @@ public class Organization {
     public void setAlias(Long alias) {
         this.alias = alias;
     }
-
 }
-
