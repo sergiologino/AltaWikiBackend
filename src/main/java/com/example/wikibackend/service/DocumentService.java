@@ -1,10 +1,12 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
 import com.example.wikibackend.model.mongodb.WikiContent;
 import com.example.wikibackend.repository.DocumentRepository;
 import com.example.wikibackend.repository.mongodb.WikiContentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ public class DocumentService {
         this.wikiContentService = wikiContentService;
     }
 
+    @Transactional
+    @SwitchSchema
     public Document createDocument(DocumentDTO documentDTO) {
         Document document = new Document();
         document.setTitle(documentDTO.getTitle());
@@ -41,6 +45,8 @@ public class DocumentService {
         return document;
     }
 
+    @Transactional
+    @SwitchSchema
     public Document updateDocument(UUID id, DocumentDTO documentDTO) {
         Document document = documentRepository.findById(id).orElseThrow(() -> new RuntimeException("Документ не найден"));
         document.setTitle(documentDTO.getTitle());
@@ -59,16 +65,20 @@ public class DocumentService {
         return document;
     }
 
+    @Transactional
+    @SwitchSchema
     public boolean deleteDocument(UUID id) {
         documentRepository.deleteById(id);
         //wikiContentRepository.deleteByDocumentId(id);// установить деактуализацию вместо удаления
         return true;
     }
 
+    @SwitchSchema
     public List<Document> getAllDocuments() {
         return documentRepository.findAll();
     }
 
+    @SwitchSchema
     public Document getDocumentById(UUID id) {
         return documentRepository.findById(id).orElse(null);
     }

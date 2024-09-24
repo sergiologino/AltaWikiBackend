@@ -1,8 +1,10 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.SpaceDTO;
 import com.example.wikibackend.model.Space;
 import com.example.wikibackend.repository.SpaceRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ public class SpaceService {
         return spaceRepository.findAll();
     }
 
+    @Transactional
+    @SwitchSchema
     public Space addSpace(SpaceDTO spaceDTO) {
         Space space = new Space();
         space.setName(spaceDTO.getName());
@@ -33,6 +37,8 @@ public class SpaceService {
         return spaceRepository.save(space);
     }
 
+    @Transactional
+    @SwitchSchema
     public Space updateSpace(UUID id, SpaceDTO spaceDTO) {
         Optional<Space> optionalSpace = spaceRepository.findById(id);
         if (optionalSpace.isPresent()) {

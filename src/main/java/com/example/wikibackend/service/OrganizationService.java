@@ -2,6 +2,7 @@ package com.example.wikibackend.service;
 
 import com.example.wikibackend.model.Organization;
 import com.example.wikibackend.repository.OrganizationRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class OrganizationService {
         this.organizationRepository = organizationRepository;
     }
 
+    @Transactional
     public Organization registerOrganization(Organization organization) {
         String name = organization.getName();
         String insertOrganizationSql = "INSERT INTO admin.organizations (name) VALUES (?) RETURNING alias";
@@ -30,6 +32,7 @@ public class OrganizationService {
         createSchema(schemaName);
         //copySchemaStructure("template_schema", schemaName);
         cloneSchema(schemaName);
+        return organization;
     }
 
     private void createSchema(String schemaName) {

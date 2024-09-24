@@ -1,11 +1,12 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.config.SwitchSchema;
+import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.model.User;
 import com.example.wikibackend.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
+    @SwitchSchema
     public User addUser(UserDTO userDTO) {
         User user = new User();
         user.setUsername(userDTO.getUsername());
@@ -34,18 +37,22 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setEnabled(true);
         user.setDeleted(false);  // Устанавливаем значение false по умолчанию
+        System.out.println("Current tenant in service: "+ TenantContext.getCurrentTenant());
         return userRepository.save(user); // Сохраняем пользователя и получаем его ID
     }
 
+    @SwitchSchema
     public boolean authenticateUser(String username, String password) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
     }
 
+    @SwitchSchema
     public List<User> getAllUsers() {
         return userRepository.findAllByDeletedFalse();
     }
 
+    @SwitchSchema
     public boolean deleteUser(UUID id) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
@@ -55,6 +62,10 @@ public class UserService {
             return true;
         }
         return false;
+    }
+    @SwitchSchema
+    public Optional<User> getUserById(UUID id) {
+        return userRepository.findById( id);
     }
 
 }

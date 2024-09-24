@@ -1,9 +1,11 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.model.Role;
 import com.example.wikibackend.model.User;
 import com.example.wikibackend.repository.RoleRepository;
 import com.example.wikibackend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ public class UserRoleService {
         this.roleRepository = roleRepository;
     }
 
+    @SwitchSchema
+    @Transactional
     public boolean assignRoleToUser(UUID userId, UUID roleId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Role> roleOptional = roleRepository.findById(roleId);
@@ -37,6 +41,8 @@ public class UserRoleService {
         return false;
     }
 
+    @SwitchSchema
+    @Transactional
     public boolean removeRoleFromUser(UUID userId, UUID roleId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Role> roleOptional = roleRepository.findById(roleId);
@@ -52,6 +58,8 @@ public class UserRoleService {
         return false;
     }
 
+    @Transactional
+    @SwitchSchema
     public boolean changeUserRole(UUID userId, UUID roleId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Role> roleOptional = roleRepository.findById(roleId);

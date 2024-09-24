@@ -47,7 +47,9 @@ public class UserController {
         // Устанавливаем organizationId в TenantContext
         Long aliasOrg = organizationService.getAlias(userDTO.getOrganizationId());
         TenantContext.setCurrentTenant(aliasOrg);
+        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         User user = userService.addUser(userDTO);
+
         // Очищаем контекст после выполнения операции
         TenantContext.clear();
         return ResponseEntity.status(201).body(user);

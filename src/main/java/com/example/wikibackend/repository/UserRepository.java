@@ -11,5 +11,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     // Метод для получения всех активных пользователей (которые не удалены)
     List<User> findAllByDeletedFalse();
+
+    Optional<User> findById(UUID Id);
 }
 

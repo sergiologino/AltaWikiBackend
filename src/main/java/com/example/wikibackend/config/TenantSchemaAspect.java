@@ -17,12 +17,16 @@ public class TenantSchemaAspect {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Before("execution(* com.example.wikibackend.service.*.*(..))")
-    public void setSchemaForOrganization() {
+    @Before("execution(* com.example.wikibackend..*(..)) && @annotation(com.example.wikibackend.config.SwitchSchema)")
+
+    public void switchSchema() {
         Long alias = TenantContext.getCurrentTenant();
         if (alias != null) {
             String schemaName = "alt_" + alias;
-            jdbcTemplate.execute("SET search_path TO " + schemaName);
+            jdbcTemplate.execute("SET search_path TO '" + schemaName+ "'");
+//            jdbcTemplate.execute("SET SCHEMA ' " + schemaName+ "'");
+            System.out.println("Переключено на схему: "+ schemaName);
+            Boolean bol = true;
         }
     }
 }
