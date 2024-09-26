@@ -14,3 +14,10 @@ CREATE TABLE IF NOT EXISTS admin.users_admin (
                                                  email VARCHAR(255) NOT NULL UNIQUE,
                                                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+-- Создание таблицы user_organization в схеме admin
+CREATE TABLE admin.user_organization (
+    user_id UUID PRIMARY KEY,
+    organization_id UUID NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    FOREIGN KEY (organization_id) REFERENCES admin.organizations(id)
+);

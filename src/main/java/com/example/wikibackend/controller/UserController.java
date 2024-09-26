@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class UserController {
 
     private final UserService userService;
     private final OrganizationService organizationService;
-
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
     public UserController(UserService userService, OrganizationService organizationService) {
@@ -65,13 +66,19 @@ public class UserController {
                     @ApiResponse(responseCode = "401", description = "Некорректные учетные данные")
             })
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> loginUser(@RequestBody UserDTO userDTO) {
+        String sql = "SELECT organization_id FROM admin.user_organization WHERE username = ?";
+        UUID organizationId = jdbcTemplate.queryForObject(sql, new Object[]{userDTO.getUsername()}, UUID.class);
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        TenantContext.setCurrentTenant(aliasOrg);
         // Бизнес-логика авторизации пользователя
         boolean isAuthenticated = userService.authenticateUser(userDTO.getUsername(), userDTO.getPassword());
+        TenantContext.clear();
         if (isAuthenticated) {
-            return ResponseEntity.ok("Авторизация успешна");
+            userDTO.setOrganization(organizationId);
+            return ResponseEntity.ok(userDTO);
         } else {
-            return ResponseEntity.status(401).body("Некорректные учетные данные");
+            return ResponseEntity.status(401).body(userDTO);
         }
     }
 
