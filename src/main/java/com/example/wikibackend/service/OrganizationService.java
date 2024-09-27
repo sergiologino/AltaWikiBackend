@@ -13,6 +13,7 @@ import java.util.UUID;
 @Service
 public class OrganizationService {
 
+
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationRepository organizationRepository;
 
@@ -25,10 +26,12 @@ public class OrganizationService {
     @Transactional
     public Organization registerOrganization(Organization organization) {
         String name = organization.getName();
-        String insertOrganizationSql = "INSERT INTO admin.organizations (name) VALUES (?) RETURNING alias";
-        String prefix = jdbcTemplate.queryForObject(insertOrganizationSql, new Object[]{name}, String.class);
+        Organization newOrg=organizationRepository.save(organization);
+        Long orgPrefix = newOrg.getAlias();
+//        String insertOrganizationSql = "INSERT INTO admin.organizations (name) VALUES (?) RETURNING alias";
+//        String prefix = jdbcTemplate.queryForObject(insertOrganizationSql, new Object[]{name}, String.class);
 
-        String schemaName = "alt_" + prefix;
+        String schemaName = "alt_" + orgPrefix;
         createSchema(schemaName);
         //copySchemaStructure("template_schema", schemaName);
         cloneSchema(schemaName);
