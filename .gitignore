@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 !build/libs/*.jar  # Исключаем jar файлы из общего правила
 !*/build/libs/*.jar  # Исключаем jar файлы для всех поддиректорий
-
+### STS ###
 ### STS ###
 .apt_generated
 .classpath
