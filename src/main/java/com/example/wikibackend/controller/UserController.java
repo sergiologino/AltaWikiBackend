@@ -3,6 +3,7 @@ package com.example.wikibackend.controller;
 import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.model.User;
+import com.example.wikibackend.model.UserAdmin;
 import com.example.wikibackend.repository.OrganizationRepository;
 import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.UserService;
@@ -49,6 +50,7 @@ public class UserController {
         Long aliasOrg = organizationService.getAlias(userDTO.getOrganizationId());
         TenantContext.setCurrentTenant(aliasOrg);
         System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
+        UserAdmin userAdmin=userService.addUserAdmin(userDTO);
         User user = userService.addUser(userDTO);
 
         // Очищаем контекст после выполнения операции

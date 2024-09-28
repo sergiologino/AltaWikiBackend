@@ -19,34 +19,15 @@ public class UserAdmin {
     private String username;
 
     @Column(nullable = false)
-    private String password;
+    private  UUID organizationId;
 
-    @Column(unique = true, nullable = false)
-    private String email;
 
-    private boolean enabled;
+    public UserAdmin() {
+    }
 
-    @Column(nullable = false)
-    private boolean deleted = false;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
-
-    // Конструкторы, геттеры и сеттеры
-
-    public UserAdmin() {}
-
-    public UserAdmin(String username, String password, String email, boolean enabled) {
+    public UserAdmin(String username, UUID organizationId) {
         this.username = username;
-        this.password = password;
-        this.email = email;
-        this.enabled = enabled;
-        this.deleted = false;
+
     }
 
     // Геттеры и сеттеры
@@ -59,6 +40,10 @@ public class UserAdmin {
         this.id = id;
     }
 
+    public void setOrganizationId(UUID organizationId) { this.organizationId=organizationId;}
+
+    public UUID getOrganizationId() { return organizationId;}
+
     public String getUsername() {
         return username;
     }
@@ -67,43 +52,5 @@ public class UserAdmin {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 }

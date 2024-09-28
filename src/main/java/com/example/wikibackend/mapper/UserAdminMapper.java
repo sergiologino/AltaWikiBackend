@@ -13,9 +13,8 @@ public class UserAdminMapper {
         public UserAdmin toEntity(UserDTO userDTO) {
             UserAdmin userAdmin = new UserAdmin();
             //organization.setID(organizationDTO.getId());
-            userAdmin.setEmail(userDTO.getEmail());
             userAdmin.setUsername(userDTO.getUsername());
-            userAdmin.setPassword(userDTO.getPassword());
+            userAdmin.setOrganizationId(userDTO.getOrganizationId());
             return userAdmin;
         }
 
@@ -23,7 +22,7 @@ public class UserAdminMapper {
         public UserDTO toDTO(UserAdmin userAdmin) {
             UserDTO newUserDTO =new UserDTO();
             newUserDTO.setUsername(userAdmin.getUsername());
-            //newUserDTO(userAdmin.getId());
+            newUserDTO.setOrganization(userAdmin.getOrganizationId());
             return newUserDTO;
         }
 }

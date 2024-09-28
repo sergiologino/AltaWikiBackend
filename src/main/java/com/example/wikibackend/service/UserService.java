@@ -23,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserAdminRepository userAdminRepository;
     @Autowired
-    JdbcTemplate jdbcTemplate;
+   // JdbcTemplate jdbcTemplate;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -31,10 +31,19 @@ public class UserService {
     public UserService(UserRepository userRepository, UserAdminRepository userAdminRepository, JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userAdminRepository = userAdminRepository;
-        this.jdbcTemplate = jdbcTemplate;
+   //     this.jdbcTemplate = jdbcTemplate;
 
 
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional
+    public UserAdmin addUserAdmin(UserDTO userDTO){
+        UserAdmin userAdmin = new UserAdmin();
+        userAdmin.setUsername(userDTO.getUsername());
+        userAdmin.setId(UUID.fromString(UUID.randomUUID().toString()));
+        userAdmin.setOrganizationId(userDTO.getOrganizationId());
+        return userAdminRepository.save(userAdmin);
     }
 
     @Transactional
@@ -47,17 +56,11 @@ public class UserService {
         user.setEnabled(true);
         user.setDeleted(false);  // Устанавливаем значение false по умолчанию
 
-        UserAdmin userAdmin = new UserAdmin();
-        userAdmin.setUsername(userDTO.getUsername());
-        userAdmin.setId(UUID.fromString(UUID.randomUUID().toString()));
-        System.out.println("Current tenant in service: "+ TenantContext.getCurrentTenant());
-
-        userAdminRepository.save(userAdmin);
 
 
 //        String sql = "INSERT INTO admin.user_organization (user_id, organization_id, username) VALUES (?, ?, ?)";
 //        jdbcTemplate.update(sql, userAdmin.getId(), userDTO.getOrganizationId(), userDTO.getUsername());
-
+        System.out.println("Current tenant in service: "+ TenantContext.getCurrentTenant());
         return userRepository.save(user); // Сохраняем пользователя и получаем его ID
     }
 
