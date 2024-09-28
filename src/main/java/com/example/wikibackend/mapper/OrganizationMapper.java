@@ -10,7 +10,7 @@ public class OrganizationMapper {
     // Преобразование DTO в сущность Organization
     public Organization toEntity(OrganizationDTO organizationDTO) {
         Organization organization = new Organization();
-        //organization.set(organizationDTO.getId());
+        //organization.setID(organizationDTO.getId());
         organization.setName(organizationDTO.getOrganization());
         organization.setAlias(organizationDTO.getAlias());
         return organization;

@@ -8,7 +8,7 @@ import java.util.UUID;
 public class Organization {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id; // Идентификатор организации (UUID)
 
     private String name; // Название организации

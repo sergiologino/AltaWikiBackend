@@ -46,16 +46,25 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api")
     implementation("junit:junit:4.13.1")
     implementation("junit:junit:4.13.1")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    // Spring Boot Actuator for metrics
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Logback for JSON logging
+    implementation("net.logstash.logback:logstash-logback-encoder:6.6")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly ("org.postgresql:postgresql")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 }
+
+
 
 dependencyManagement {
     imports {
