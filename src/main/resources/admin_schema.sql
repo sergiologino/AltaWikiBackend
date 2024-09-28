@@ -11,6 +11,5 @@ CREATE TABLE IF NOT EXISTS admin.users_admin (
                                                  user_id UUID PRIMARY KEY,
                                                  organization_id UUID NOT NULL REFERENCES admin.organizations(id),
                                                  username VARCHAR(255) NOT NULL,
-                                                 email VARCHAR(255) NOT NULL UNIQUE,
                                                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

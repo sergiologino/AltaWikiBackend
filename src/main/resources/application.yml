@@ -9,9 +9,9 @@ spring:
       database: wikidb
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/wikidb
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://194.135.36.133:5432/wikidb
+    username: altauser
+    password: altauser
 #    hikari:
 #      #      schema: news
 #      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
