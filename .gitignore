@@ -1,9 +1,18 @@
 HELP.md
 .gradle
-build/
+build/classes
+build/generated
+build/reports
+build/resources
+build/test-results
+build/tmp
+!build/libs
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+!build/libs/*.jar  # Исключаем jar файлы из общего правила
+!*/build/libs/*.jar  # Исключаем jar файлы для всех поддиректорий
+### STS ###
 
 ### STS ###
 .apt_generated
