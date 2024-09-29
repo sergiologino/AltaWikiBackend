@@ -11,18 +11,22 @@ services:
     depends_on:
       - postgres
     environment:
+
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/wikidb
       SPRING_DATASOURCE_USERNAME: altauser
       SPRING_DATASOURCE_PASSWORD: altauser
+
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
   
   postgres:
     image: postgres:12
     environment:
+
       POSTGRES_DB: wikidb
       POSTGRES_USER: altauser
       POSTGRES_PASSWORD: altauser
+
     ports:
       - "5432:5432"
     volumes:
