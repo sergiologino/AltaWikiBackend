@@ -34,7 +34,7 @@ public class SecurityConfig {
                         // Все остальные запросы требуют аутентификации
                         .anyRequest().authenticated()
                 )
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable).cors();
         return http.build();
     }
 
@@ -42,6 +42,8 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -52,14 +54,16 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(user);
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer(){
-//        return new WebMvcConfigurer(){
-//            public void addCorsMapings(CorsRegistry registry){
-//                registry.addMapping("/v3/api-docs/").allowedOrigins("*");
-//            }
-//        };
-//
-//
-//    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer(){
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
+                //WebMvcConfigurer.super.addCorsMappings(registry);
+            }
+        };
+    }
+
+
 }
