@@ -7,12 +7,10 @@ CREATE TABLE admin.organizations (
                                      name VARCHAR(255) NOT NULL,
                                      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE IF NOT EXISTS admin.users_admin (
+CREATE TABLE IF NOT EXISTS admin.users_organization (
                                                  user_id UUID PRIMARY KEY,
                                                  organization_id UUID NOT NULL REFERENCES admin.organizations(id),
-                                                 username VARCHAR(255) NOT NULL,
-                                                 email VARCHAR(255) NOT NULL UNIQUE,
-                                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                                 username VARCHAR(255) NOT NULL
 );
 -- Создание таблицы user_organization в схеме admin
 CREATE TABLE admin.user_organization (
