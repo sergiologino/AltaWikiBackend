@@ -12,3 +12,10 @@ CREATE TABLE IF NOT EXISTS admin.users_organization (
                                                  organization_id UUID NOT NULL REFERENCES admin.organizations(id),
                                                  username VARCHAR(255) NOT NULL
 );
+-- Создание таблицы user_organization в схеме admin
+CREATE TABLE admin.user_organization (
+    user_id UUID PRIMARY KEY,
+    organization_id UUID NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    FOREIGN KEY (organization_id) REFERENCES admin.organizations(id)
+);

@@ -13,6 +13,7 @@ public class User {
     @Id
     @GeneratedValue
     private UUID id = UUID.randomUUID();
+    // text
 
     @Column(unique = true, nullable = false)
     private String username;

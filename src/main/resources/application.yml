@@ -35,3 +35,12 @@ springdoc:
   swagger-ui:
     tagsSorter: alpha
 
+logging:
+  level:
+    root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
