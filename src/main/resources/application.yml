@@ -33,7 +33,14 @@ spring:
 
 springdoc:
   swagger-ui:
+    enabled: true
+    use-root-path: true
+    url: /v3/api-docs
     tagsSorter: alpha
+    path: /swagger-ui
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
 
 logging:
   level:
