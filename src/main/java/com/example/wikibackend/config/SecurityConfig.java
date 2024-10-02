@@ -33,8 +33,8 @@ public class SecurityConfig {
             http.csrf(AbstractHttpConfigurer::disable)
                     .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests((requests) -> requests
-                            .requestMatchers("/api/users", "/api/roles").authenticated()
-                            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+ //                           .requestMatchers("/api/users", "/api/roles").authenticated()
+                            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/users", "/api/roles","/v3/**").permitAll()
                     );
             http.formLogin(withDefaults());
             http.httpBasic(withDefaults());
@@ -76,7 +76,7 @@ public class SecurityConfig {
         //Make the below setting as * to allow connection from any hos
         corsConfiguration.setAllowedOrigins(List.of("/**"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST","PUT","DELETE","OPTIONS"));
-        corsConfiguration.setAllowCredentials(true);
+       // corsConfiguration.setAllowCredentials(false);
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -84,21 +84,21 @@ public class SecurityConfig {
         return source;
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer(){
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                        .allowedOrigins("*")
-//                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
-//                        .allowedHeaders("*")
-//                        .exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials")
-//                        .allowCredentials(true);
-//                //WebMvcConfigurer.super.addCorsMappings(registry);
-//            }
-//        };
-//    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer(){
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
+                        .allowedHeaders("*")
+                        .exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials")
+                        .allowCredentials(true);
+                //WebMvcConfigurer.super.addCorsMappings(registry);
+            }
+        };
+    }
 
 
 }
