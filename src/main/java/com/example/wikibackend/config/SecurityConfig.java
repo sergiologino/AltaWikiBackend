@@ -30,28 +30,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http.csrf(AbstractHttpConfigurer::disable)
-                    .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
-                    .authorizeHttpRequests((requests) -> requests
- //                           .requestMatchers("/api/users", "/api/roles").authenticated()
-                            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/users", "/api/roles","/v3/**").permitAll()
-                    );
-            http.formLogin(withDefaults());
-            http.httpBasic(withDefaults());
-            return http.build();
-//        http
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        // Разрешить доступ к Swagger и публичным ресурсам
+
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-//                        // Разрешить доступ к эндпойнтам регистрации и авторизации пользователей
-//                        .requestMatchers("/api/**").permitAll()
-//                        .requestMatchers("/api/users/**").permitAll()
-//                        // Все остальные запросы требуют аутентификации
-//                        .anyRequest().authenticated()
-//                )
-//                .csrf(AbstractHttpConfigurer::disable).cors();
-//        return http.build();
+                        .anyRequest().permitAll()
+                );
+        return http.build();
+
+    }
+
+
+
+
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails admin = User.withUsername("admin")
+                .password(passwordEncoder().encode("password"))
+                .roles("ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(admin);
     }
 
     @Bean
@@ -59,22 +60,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("user")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
-    }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         //Make the below setting as * to allow connection from any hos
-        corsConfiguration.setAllowedOrigins(List.of("/**"));
+        corsConfiguration.setAllowedOrigins(List.of("/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/users", "/api/roles","/v3/**"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST","PUT","DELETE","OPTIONS"));
        // corsConfiguration.setAllowCredentials(false);
         corsConfiguration.setAllowedHeaders(List.of("*"));
@@ -83,22 +73,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer(){
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
-                        .allowedHeaders("*")
-                        .exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials")
-                        .allowCredentials(true);
-                //WebMvcConfigurer.super.addCorsMappings(registry);
-            }
-        };
-    }
-
-
 }
