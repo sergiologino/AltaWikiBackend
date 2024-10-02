@@ -28,18 +28,35 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .authorizeHttpRequests(auth -> auth
+////                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+//                        .anyRequest().permitAll()
+//                );
+//        return http.build();
+//
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().permitAll()
-                );
-        return http.build();
+                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                        // Разрешить доступ к Swagger и публичным ресурсам
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        // Разрешить доступ к эндпойнтам регистрации и авторизации пользователей
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/users/**").permitAll()
+                        // Все остальные запросы требуют аутентификации
+                        .anyRequest().authenticated()
+                )
+                .csrf(AbstractHttpConfigurer::disable);
 
+        return http.build();
     }
 
 
