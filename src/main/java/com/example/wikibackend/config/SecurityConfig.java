@@ -54,6 +54,7 @@ public class SecurityConfig {
                         // Все остальные запросы требуют аутентификации
                         .anyRequest().authenticated()
                 )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
