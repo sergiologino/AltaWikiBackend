@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: WikiBackend
@@ -9,7 +12,7 @@ spring:
       database: wikicontent
 
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/wikidb
+    url: jdbc:postgresql://localhost:5432/wikidb
     username: postgres
     password: postgres
   #    hikari:
@@ -35,10 +38,12 @@ springdoc:
   swagger-ui:
     enabled: true
     tagsSorter: alpha
+    path: /swagger-ui.html
   api-docs:
     enabled: true
-  openapi:
-    version: 3.0.3
+    path: /v3/api-docs
+#  openapi:
+#    version: 3.0.3
 
 logging:
   level:

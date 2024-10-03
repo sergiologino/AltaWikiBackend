@@ -6,18 +6,20 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+@Configuration
 public class OpenApiConfiguration {
     public OpenAPI openApiDescription() {
-        Server localhostServer = new Server();
-        localhostServer.setUrl("http://localhost:8080");
-        localhostServer.setDescription("local environment");
-
-        Server productionServer = new Server();
-        productionServer.setUrl("https://altawiki.altacod.ru");
-        productionServer.setDescription("Production environment");
+//        Server localhostServer = new Server();
+//        localhostServer.setUrl("http://localhost:8080");
+//        localhostServer.setDescription("local environment");
+//
+//        Server productionServer = new Server();
+//        productionServer.setUrl("https://altawiki.altacod.ru");
+//        productionServer.setDescription("Production environment");
 
         Contact contact = new Contact();
         contact.setName("Савкин Сергей");
@@ -35,7 +37,8 @@ public class OpenApiConfiguration {
                 .termsOfService("https://terms-altawiki.altacod.ru")
                 .license(mitLicense);
 
-        return new OpenAPI().info(info).servers(List.of(localhostServer, productionServer));
+        //return new OpenAPI().info(info).servers(List.of(localhostServer, productionServer));
+        return new OpenAPI().info(info);
     }
 }
 

@@ -12,6 +12,7 @@ public class Space {
     @Id
     @GeneratedValue
     private UUID id = UUID.randomUUID();
+
     @Column(nullable = false)
     private String name;
 

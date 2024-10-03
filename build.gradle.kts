@@ -38,13 +38,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"){
-        exclude(group="io.swagger.core.v3", module="swagger-core")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0"){
+   //     exclude(group="io.swagger.core.v3", module="swagger-core")
     }
-    implementation("io.swagger.core.v3:swagger-core:2.2.23")
-    implementation("io.swagger.core.v3:swagger-annotations:2.2.23")
+//    implementation("io.swagger.core.v3:swagger-core:2.2.23")
+//    implementation("io.swagger.core.v3:swagger-annotations:2.2.23")
  //   implementation("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
-    { exclude (group="org.slf4j", module="slf4j-simple")}
+//    { exclude (group="org.slf4j", module="slf4j-simple")}
     implementation("jakarta.validation:jakarta.validation-api")
     implementation("junit:junit:4.13.1")
     implementation("junit:junit:4.13.1")
