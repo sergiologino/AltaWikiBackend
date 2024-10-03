@@ -37,8 +37,8 @@ springdoc:
     tagsSorter: alpha
   api-docs:
     enabled: true
-  openapi:
-    version: 3.0.3
+#  openapi:
+#    version: 3.0.3
 
 logging:
   level:
