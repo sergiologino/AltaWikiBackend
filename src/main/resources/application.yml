@@ -1,6 +1,8 @@
 server:
   port: 8080
 
+# релизный конфиг
+
 spring:
   application:
     name: WikiBackend
