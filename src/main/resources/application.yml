@@ -9,7 +9,7 @@ spring:
   security:
     user:
       name: admin
-      password: admin
+      password: {bcrypt}admin
 
   data:
     mongodb:
