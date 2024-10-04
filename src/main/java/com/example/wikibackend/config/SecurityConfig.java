@@ -38,7 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                        //.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         // Разрешить доступ к Swagger и публичным ресурсам
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Разрешить доступ к эндпойнтам регистрации и авторизации пользователей
@@ -79,7 +79,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         //Make the below setting as * to allow connection from any hos
-        corsConfiguration.setAllowedOrigins(List.of("/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/v3/**"));
+//        corsConfiguration.setAllowedOrigins(List.of("/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/v3/**"));
+        corsConfiguration.setAllowedOrigins(List.of("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/v3/**"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST","PUT","DELETE","OPTIONS"));
        // corsConfiguration.setAllowCredentials(false);
         corsConfiguration.setAllowedHeaders(List.of("*"));
