@@ -67,18 +67,19 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
 
-        String idForEncode = "bcrypt";
-        Map encoders = new HashMap<>();
-        encoders.put(idForEncode, new BCryptPasswordEncoder());
-        encoders.put("noop", NoOpPasswordEncoder.getInstance());
+//        String idForEncode = "bcrypt";
+//        Map encoders = new HashMap<>();
+//        encoders.put(idForEncode, new BCryptPasswordEncoder());
+//        encoders.put("noop", NoOpPasswordEncoder.getInstance());
 //        encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
 //        encoders.put("scrypt", new SCryptPasswordEncoder());
 //        encoders.put("sha256", new StandardPasswordEncoder());
-        PasswordEncoder passwordEncoder =
-                new DelegatingPasswordEncoder(idForEncode, encoders);
-//        return new NoOpPass;
-//        return new BCryptPasswordEncoder();
-        return passwordEncoder;
+//        PasswordEncoder passwordEncoder =
+//                new DelegatingPasswordEncoder(idForEncode, encoders);
+//
+//        return passwordEncoder;
+        return NoOpPasswordEncoder.getInstance();
+
     }
 
     @Bean
