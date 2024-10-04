@@ -42,7 +42,11 @@ public class DocumentController {
             })
     @PostMapping
     public ResponseEntity<?> createDocument(@RequestBody DocumentDTO documentDTO) {
+
         Long aliasOrg = organizationService.getAlias(documentDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         Document document = documentService.createDocument(documentDTO);
         TenantContext.clear();
@@ -65,6 +69,9 @@ public class DocumentController {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         Document updatedDocument = documentService.updateDocument(id, documentDTO);
         TenantContext.clear();
@@ -82,6 +89,9 @@ public class DocumentController {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         boolean isDeleted = documentService.deleteDocument(id);
         TenantContext.clear();
@@ -103,6 +113,9 @@ public class DocumentController {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         List<Document> documents = documentService.getAllDocuments();
         TenantContext.clear();
@@ -121,6 +134,9 @@ public class DocumentController {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         Document document = documentService.getDocumentById(id);
         TenantContext.clear();

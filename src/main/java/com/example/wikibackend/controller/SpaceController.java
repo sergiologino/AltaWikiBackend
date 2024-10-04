@@ -38,6 +38,10 @@ public class SpaceController {
     @GetMapping
     public ResponseEntity<List<Space>> getAllSpaces(@PathVariable UUID organizationId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         return ResponseEntity.ok(spaceService.getAllSpaces());
     }
@@ -55,6 +59,10 @@ public class SpaceController {
     @PostMapping
     public ResponseEntity<Space> addSpace(@RequestBody SpaceDTO spaceDTO) {
         Long aliasOrg = organizationService.getAlias(spaceDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         Space space = spaceService.addSpace(spaceDTO);
         return ResponseEntity.status(201).body(space);
@@ -73,6 +81,10 @@ public class SpaceController {
     @PutMapping("/{id}")
     public ResponseEntity<Space> updateSpace(@PathVariable UUID id, @RequestBody SpaceDTO spaceDTO) {
         Long aliasOrg = organizationService.getAlias(spaceDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         Space updatedSpace = spaceService.updateSpace(id, spaceDTO);
         return ResponseEntity.ok(updatedSpace);

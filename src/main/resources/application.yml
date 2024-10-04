@@ -7,18 +7,18 @@ spring:
 
   data:
     mongodb:
-      host: localhost
+      host: 213.171.12.202
       port: 27017
       database: wikicontent
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/wikidb
-    username: postgres
-    password: postgres
-  #    hikari:
-  #      #      schema: news
-  #      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
-  #      connection-timeout: 10000
+    url: jdbc:postgresql://194.135.36.133:5432/wikidb
+    username: altauser
+    password: altauser
+#    hikari:
+#      #      schema: news
+#      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
+#      connection-timeout: 10000
 
   jpa:
     properties:
@@ -37,13 +37,12 @@ spring:
 springdoc:
   swagger-ui:
     enabled: true
+    url: /v3/api-docs
     tagsSorter: alpha
-    path: /swagger-ui.html
+    path: /swagger-ui
   api-docs:
     enabled: true
     path: /v3/api-docs
-#  openapi:
-#    version: 3.0.3
 
 logging:
   level:

@@ -1,21 +1,24 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: WikiBackend
 
   data:
     mongodb:
-      host: 213.171.12.202
+      host: localhost
       port: 27017
       database: wikicontent
 
   datasource:
-    url: jdbc:postgresql://194.135.36.133:5432/wikidb
-    username: altauser
-    password: altauser
-#    hikari:
-#      #      schema: news
-#      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
-#      connection-timeout: 10000
+    url: jdbc:postgresql://localhost:5432/wikidb
+    username: postgres
+    password: postgres
+  #    hikari:
+  #      #      schema: news
+  #      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
+  #      connection-timeout: 10000
 
   jpa:
     properties:
@@ -34,13 +37,13 @@ spring:
 springdoc:
   swagger-ui:
     enabled: true
-    use-root-path: true
-    url: /v3/api-docs
     tagsSorter: alpha
-    path: /swagger-ui
+    path: /swagger-ui.html
   api-docs:
     enabled: true
     path: /v3/api-docs
+#  openapi:
+#    version: 3.0.3
 
 logging:
   level:

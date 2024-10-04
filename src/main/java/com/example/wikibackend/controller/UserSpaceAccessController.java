@@ -38,7 +38,14 @@ public class UserSpaceAccessController {
                             content = @Content(schema = @Schema(implementation = Space.class)))
             })
     @GetMapping("/spaces")
-    public ResponseEntity<List<Space>> getAllSpaces() {
+    public ResponseEntity<List<Space>> getAllSpaces(@PathVariable UUID organizationId) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
+        TenantContext.setCurrentTenant(aliasOrg);
+        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         return ResponseEntity.ok(userSpaceAccessService.getAllSpaces());
     }
 
@@ -54,6 +61,10 @@ public class UserSpaceAccessController {
     @PostMapping("/assign")
     public ResponseEntity<UserSpaceAccess> assignSpaceAccess(@RequestBody UserSpaceAccessDTO userSpaceAccessDTO) {
         Long aliasOrg = organizationService.getAlias(userSpaceAccessDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         return ResponseEntity.ok(userSpaceAccessService.assignSpaceAccess(userSpaceAccessDTO.getUserId(),userSpaceAccessDTO.getSpaceId(),userSpaceAccessDTO.getAccessType()));
@@ -67,6 +78,10 @@ public class UserSpaceAccessController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<UserSpaceAccess>> getUserSpaceAccesses(@PathVariable UUID organizationId, UUID userId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         return ResponseEntity.ok(userSpaceAccessService.getUserSpaceAccesses(userId));
     }
@@ -79,6 +94,10 @@ public class UserSpaceAccessController {
     @GetMapping("/space/{spaceId}")
     public ResponseEntity<List<UserSpaceAccess>> getSpaceUsers(@PathVariable UUID organizationId, UUID spaceId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         return ResponseEntity.ok(userSpaceAccessService.getSpaceUsers(spaceId));
     }
