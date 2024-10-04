@@ -1,9 +1,13 @@
 package com.example.wikibackend.dto;
 
 import com.example.wikibackend.model.AccessType;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class UserSpaceAccessDTO extends BaseDTO{
 
     private UUID userId;
@@ -19,6 +23,7 @@ public class UserSpaceAccessDTO extends BaseDTO{
         this.userId = userId;
         this.spaceId = spaceId;
         this.accessType = accessType;
+
     }
 
     public UUID getUserId() {

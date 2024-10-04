@@ -100,7 +100,10 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Пользователь не найден")
             })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteUser(@PathVariable UUID organizationId, UUID id) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        TenantContext.setCurrentTenant(aliasOrg);
+        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         boolean isDeleted = userService.deleteUser(id);
         if (isDeleted) {
             return ResponseEntity.ok("Пользователь успешно помечен как удаленный");

@@ -1,7 +1,9 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.SpaceDTO;
 import com.example.wikibackend.model.Space;
+import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.SpaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,10 +22,12 @@ import java.util.UUID;
 public class SpaceController {
 
     private final SpaceService spaceService;
+    private final OrganizationService organizationService;
 
     @Autowired
-    public SpaceController(SpaceService spaceService) {
+    public SpaceController(SpaceService spaceService, OrganizationService organizationService) {
         this.spaceService = spaceService;
+        this.organizationService = organizationService;
     }
 
     @Operation(summary = "Получить все разделы",
@@ -32,7 +36,9 @@ public class SpaceController {
                             content = @Content(schema = @Schema(implementation = Space.class)))
             })
     @GetMapping
-    public ResponseEntity<List<Space>> getAllSpaces() {
+    public ResponseEntity<List<Space>> getAllSpaces(@PathVariable UUID organizationId) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        TenantContext.setCurrentTenant(aliasOrg);
         return ResponseEntity.ok(spaceService.getAllSpaces());
     }
 
@@ -48,6 +54,8 @@ public class SpaceController {
             })
     @PostMapping
     public ResponseEntity<Space> addSpace(@RequestBody SpaceDTO spaceDTO) {
+        Long aliasOrg = organizationService.getAlias(spaceDTO.getOrganizationId());
+        TenantContext.setCurrentTenant(aliasOrg);
         Space space = spaceService.addSpace(spaceDTO);
         return ResponseEntity.status(201).body(space);
     }
@@ -64,6 +72,8 @@ public class SpaceController {
             })
     @PutMapping("/{id}")
     public ResponseEntity<Space> updateSpace(@PathVariable UUID id, @RequestBody SpaceDTO spaceDTO) {
+        Long aliasOrg = organizationService.getAlias(spaceDTO.getOrganizationId());
+        TenantContext.setCurrentTenant(aliasOrg);
         Space updatedSpace = spaceService.updateSpace(id, spaceDTO);
         return ResponseEntity.ok(updatedSpace);
     }

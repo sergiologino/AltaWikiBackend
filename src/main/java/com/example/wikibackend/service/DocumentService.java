@@ -75,6 +75,8 @@ public class DocumentService {
 
     @SwitchSchema
     public List<Document> getAllDocuments() {
+
+
         return documentRepository.findAll();
     }
 
