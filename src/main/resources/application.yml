@@ -6,6 +6,10 @@ server:
 spring:
   application:
     name: WikiBackend
+  security:
+    user:
+      name: admin
+      password: admin
 
   data:
     mongodb:
