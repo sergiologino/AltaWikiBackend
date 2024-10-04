@@ -1,8 +1,10 @@
 package com.example.wikibackend.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -64,22 +66,13 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin);
     }
 
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
     @Bean
-    public PasswordEncoder passwordEncoder() {
-
-//        String idForEncode = "bcrypt";
-//        Map encoders = new HashMap<>();
-//        encoders.put(idForEncode, new BCryptPasswordEncoder());
-//        encoders.put("noop", NoOpPasswordEncoder.getInstance());
-//        encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
-//        encoders.put("scrypt", new SCryptPasswordEncoder());
-//        encoders.put("sha256", new StandardPasswordEncoder());
-//        PasswordEncoder passwordEncoder =
-//                new DelegatingPasswordEncoder(idForEncode, encoders);
-//
-//        return passwordEncoder;
-        return NoOpPasswordEncoder.getInstance();
-
+    public static NoOpPasswordEncoder passwordEncoder() {
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
