@@ -2,8 +2,11 @@ server:
   port: 8080
 
 # релизный конфиг
+spring:
 
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   application:
     name: WikiBackend
   security:
