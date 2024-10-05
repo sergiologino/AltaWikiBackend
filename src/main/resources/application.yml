@@ -9,7 +9,7 @@ spring:
   security:
     user:
       name: admin
-      password: {noop}admin
+      password: admin
 
   data:
     mongodb:
