@@ -21,10 +21,7 @@ public class SecurityConfiguration  {
                 .httpBasic(withDefaults());
         return http.build();
     }
-//   @Bean
-//    public void configure(WebSecurity web) {
-//        web.ignoring().requestMatchers("/v3/api-docs", "/swagger-ui.html", "/swagger-ui/**");
-//    }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/v3/api-docs", "/swagger-ui.html", "/swagger-ui/**","/swagger-ui/index.html");
