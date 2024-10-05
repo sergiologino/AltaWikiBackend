@@ -16,7 +16,7 @@ public class SecurityConfiguration  {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults());
         return http.build();
@@ -27,7 +27,7 @@ public class SecurityConfiguration  {
 //    }
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/v3/api-docs", "/swagger-ui.html", "/swagger-ui/**");
+        return (web) -> web.ignoring().requestMatchers("/v3/api-docs", "/swagger-ui.html", "/swagger-ui/**","/swagger-ui/index.html");
     }
 
 }
