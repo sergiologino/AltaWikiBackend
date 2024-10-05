@@ -16,13 +16,10 @@ public class SecurityConfiguration  {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().permitAll()
-                )
-                .httpBasic(withDefaults());
+        http.authorizeHttpRequests().anyRequest().permitAll();
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
