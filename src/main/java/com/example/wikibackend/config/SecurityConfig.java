@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.*;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
@@ -40,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         //.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         // Разрешить доступ к Swagger и публичным ресурсам
+
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Разрешить доступ к эндпойнтам регистрации и авторизации пользователей
                         .requestMatchers("/api/**").permitAll()
@@ -47,47 +50,43 @@ public class SecurityConfig {
                         // Все остальные запросы требуют аутентификации
                         .anyRequest().authenticated()
                 )
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
 
-
-
-
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(admin);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails admin = User.withUsername("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("ADMIN")
+//                .build();
+//        return new InMemoryUserDetailsManager(admin);
+//    }
 
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
 //        return NoOpPasswordEncoder.getInstance();
 //    }
-    @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-    }
+//    @Bean
+//    public static NoOpPasswordEncoder passwordEncoder() {
+//        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+//    }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        //Make the below setting as * to allow connection from any hos
-//        corsConfiguration.setAllowedOrigins(List.of("/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/v3/**"));
-        corsConfiguration.setAllowedOrigins(List.of("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/v3/**"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST","PUT","DELETE","OPTIONS"));
-       // corsConfiguration.setAllowCredentials(false);
-        corsConfiguration.setAllowedHeaders(List.of("*"));
-        corsConfiguration.setMaxAge(3600L);
-        corsConfiguration.setAllowPrivateNetwork(true); //разрешать через VPN
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        //Make the below setting as * to allow connection from any hos
+////        corsConfiguration.setAllowedOrigins(List.of("/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/v3/**"));
+//        corsConfiguration.setAllowedOrigins(List.of("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/v3/**"));
+//        corsConfiguration.setAllowedMethods(List.of("GET", "POST","PUT","DELETE","OPTIONS"));
+//        corsConfiguration.setAllowCredentials(false);
+//        corsConfiguration.setAllowedHeaders(List.of("*"));
+//        corsConfiguration.setMaxAge(3600L);
+//        corsConfiguration.setAllowPrivateNetwork(true); //разрешать через VPN
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", corsConfiguration);
+//        return source;
+//    }
 }
