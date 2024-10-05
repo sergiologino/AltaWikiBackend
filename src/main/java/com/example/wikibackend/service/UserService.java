@@ -23,19 +23,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserAdminRepository userAdminRepository;
-    @Autowired
-   // JdbcTemplate jdbcTemplate;
 
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserAdminRepository userAdminRepository, JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserAdminRepository userAdminRepository, JdbcTemplate jdbcTemplate) {
         this.userRepository = userRepository;
         this.userAdminRepository = userAdminRepository;
    //     this.jdbcTemplate = jdbcTemplate;
-
-
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -52,7 +46,8 @@ public class UserService {
     public User addUser(UserDTO userDTO) {
         User user = new User();
         user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+//        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
         user.setEnabled(true);
         user.setDeleted(false);  // Устанавливаем значение false по умолчанию
@@ -69,7 +64,7 @@ public class UserService {
     public boolean authenticateUser(String username, String password) {
 
         Optional<User> userOptional = userRepository.findByUsername(username);
-        return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
+        return userOptional.isPresent() && (password.equals(userOptional.get().getPassword()));
     }
 
     @SwitchSchema
