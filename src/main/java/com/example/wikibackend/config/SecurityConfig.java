@@ -74,7 +74,7 @@ public class SecurityConfig {
 //        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
 //    }
 
-    @Bean
+//    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration corsConfiguration = new CorsConfiguration();
 //        //Make the below setting as * to allow connection from any hos
