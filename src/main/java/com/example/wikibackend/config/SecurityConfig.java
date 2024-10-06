@@ -52,6 +52,8 @@ public class SecurityConfig {
                 )
 //                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable);
+        http.httpBasic().disable();
+
 
         return http.build();
     }
