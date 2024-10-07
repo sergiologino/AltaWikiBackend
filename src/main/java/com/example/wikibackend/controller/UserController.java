@@ -48,6 +48,10 @@ public class UserController {
     public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
         // Устанавливаем organizationId в TenantContext
         Long aliasOrg = organizationService.getAlias(userDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         UserAdmin userAdmin=userService.addUserAdmin(userDTO);
@@ -72,6 +76,10 @@ public class UserController {
         String sql = "SELECT organization_id FROM admin.user_organization WHERE username = ?";
         UUID organizationId = jdbcTemplate.queryForObject(sql, new Object[]{userDTO.getUsername()}, UUID.class);
         Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
         TenantContext.setCurrentTenant(aliasOrg);
         // Бизнес-логика авторизации пользователя
         boolean isAuthenticated = userService.authenticateUser(userDTO.getUsername(), userDTO.getPassword());
@@ -90,7 +98,13 @@ public class UserController {
                             content = @Content(schema = @Schema(implementation = User.class)))
             })
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers(@PathVariable UUID organizationId) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        TenantContext.setCurrentTenant(aliasOrg);
+        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -100,7 +114,13 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Пользователь не найден")
             })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteUser(@PathVariable UUID organizationId, UUID id) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body("Не удалось получить организацию, проверьте авторизацию");
+        }
+        TenantContext.setCurrentTenant(aliasOrg);
+        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         boolean isDeleted = userService.deleteUser(id);
         if (isDeleted) {
             return ResponseEntity.ok("Пользователь успешно помечен как удаленный");

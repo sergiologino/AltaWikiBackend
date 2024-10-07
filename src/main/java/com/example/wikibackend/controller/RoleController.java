@@ -1,13 +1,16 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.RoleDTO;
 import com.example.wikibackend.model.Role;
+import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +23,12 @@ import java.util.UUID;
 public class RoleController {
 
     private final RoleService roleService;
+    private final OrganizationService organizationService;
 
     @Autowired
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService, OrganizationService organizationService) {
         this.roleService = roleService;
+        this.organizationService = organizationService;
     }
 
     @Operation(summary = "Получить все роли",
@@ -32,7 +37,12 @@ public class RoleController {
                             content = @Content(schema = @Schema(implementation = Role.class)))
             })
     @GetMapping
-    public ResponseEntity<List<Role>> getAllRoles() {
+    public ResponseEntity<List<Role>> getAllRoles(@PathVariable UUID organizationId) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        TenantContext.setCurrentTenant(aliasOrg);
         return ResponseEntity.ok(roleService.getAllRoles());
     }
 
@@ -48,6 +58,11 @@ public class RoleController {
             })
     @PostMapping
     public ResponseEntity<Role> addRole(@RequestBody RoleDTO roleDTO) {
+        Long aliasOrg = organizationService.getAlias(roleDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        TenantContext.setCurrentTenant(aliasOrg);
         Role role = roleService.addRole(roleDTO);
         return ResponseEntity.status(201).body(role);
     }
@@ -64,6 +79,11 @@ public class RoleController {
             })
     @PutMapping("/{id}")
     public ResponseEntity<Role> updateRole(@PathVariable UUID id, @RequestBody RoleDTO roleDTO) {
+        Long aliasOrg = organizationService.getAlias(roleDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        TenantContext.setCurrentTenant(aliasOrg);
         Role updatedRole = roleService.updateRole(id, roleDTO);
         return ResponseEntity.ok(updatedRole);
     }
