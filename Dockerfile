@@ -1,5 +1,5 @@
 
-# Use the official image as a parent image
+# Use the official image  as a parent image
 FROM openjdk:17-jdk-slim
 
 # Set the working directory in the container
