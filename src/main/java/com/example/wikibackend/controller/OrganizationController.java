@@ -27,11 +27,11 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
             })
     @PostMapping("/register")
-    public ResponseEntity<String> registerOrganization(@RequestBody OrganizationDTO organizationDTO) {
+    public ResponseEntity<Organization> registerOrganization(@RequestBody OrganizationDTO organizationDTO) {
         OrganizationMapper newOrgMap = new OrganizationMapper();
         Organization entityOrg= newOrgMap.toEntity(organizationDTO);
         Organization createdOrganization = organizationService.registerOrganization(entityOrg);
-        return ResponseEntity.ok("Организация успешно зарегистрирована");
+        return ResponseEntity.ok(createdOrganization);
     }
 }
 
