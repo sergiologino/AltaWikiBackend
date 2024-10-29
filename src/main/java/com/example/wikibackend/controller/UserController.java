@@ -94,7 +94,7 @@ public class UserController {
 
     @Operation(summary = "Получение списка всех пользователей",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Список всех пользователей",
+                    @ApiResponse(responseCode = "200", description = "Список  всех пользователей",
                             content = @Content(schema = @Schema(implementation = User.class)))
             })
     @GetMapping
