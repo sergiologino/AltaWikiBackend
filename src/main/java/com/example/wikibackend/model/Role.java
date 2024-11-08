@@ -19,6 +19,8 @@ public class Role {
 
     private String role_name;
 
+    private String description;
+
     public UUID getId() {
         return id;
     }

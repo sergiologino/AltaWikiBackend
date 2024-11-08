@@ -50,6 +50,7 @@ public class UserService {
     @Transactional
     @SwitchSchema
     public User addUser(UserDTO userDTO) {
+        addUserAdmin(userDTO);
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
@@ -61,7 +62,7 @@ public class UserService {
 
 //        String sql = "INSERT INTO admin.user_organization (user_id, organization_id, username) VALUES (?, ?, ?)";
 //        jdbcTemplate.update(sql, userAdmin.getId(), userDTO.getOrganizationId(), userDTO.getUsername());
-        System.out.println("Current tenant in service: "+ TenantContext.getCurrentTenant());
+        System.out.println("Current tenant in Userservice method addUser  : "+ TenantContext.getCurrentTenant());
         return userRepository.save(user); // Сохраняем пользователя и получаем его ID
     }
 

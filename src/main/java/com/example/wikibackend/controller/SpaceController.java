@@ -6,6 +6,7 @@ import com.example.wikibackend.model.Space;
 import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.SpaceService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -31,11 +32,19 @@ public class SpaceController {
     }
 
     @Operation(summary = "Получить все разделы",
+            parameters = {
+                    @Parameter(
+                            name = "organizationId",
+                            description = "UUID организации",
+                            required = true,
+                            schema = @Schema(type = "string", format = "uuid")
+                    )
+            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Список всех разделов",
                             content = @Content(schema = @Schema(implementation = Space.class)))
             })
-    @GetMapping
+    @GetMapping("/organizationId")
     public ResponseEntity<List<Space>> getAllSpaces(@PathVariable UUID organizationId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {
@@ -50,7 +59,7 @@ public class SpaceController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SpaceDTO.class),
-                            examples = @ExampleObject(value = "{\"name\": \"Новый раздел\", \"author\": \"Автор\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"5929cf36-101f-471f-a9b0-afbb3964cd37\",\"name\": \"Новый раздел\", \"description\": \"Описание раздела\",\"authorId\": \"id автора (текущий пользователь)\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Раздел успешно добавлен",
                             content = @Content(schema = @Schema(implementation = Space.class))),
@@ -70,23 +79,24 @@ public class SpaceController {
 
     @Operation(summary = "Изменить раздел",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SpaceDTO.class),
-                            examples = @ExampleObject(value = "{\"name\": \"Обновленный раздел\", \"author\": \"Автор\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"5929cf36-101f-471f-a9b0-afbb3964cd37\",\"name\": \"Обновленный раздел\",  \"description\": \"Описание раздела\",\"authorId\": \"id автора (текущий пользователь)\"}"))),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Раздел успешно изменен",
                             content = @Content(schema = @Schema(implementation = Space.class))),
                     @ApiResponse(responseCode = "404", description = "Раздел не найден")
             })
-    @PutMapping("/{id}")
-    public ResponseEntity<Space> updateSpace(@PathVariable UUID id, @RequestBody SpaceDTO spaceDTO) {
+    @PutMapping("/{Spaceid}")
+    public ResponseEntity<Space> updateSpace(@PathVariable UUID Spaceid, @RequestBody SpaceDTO spaceDTO) {
         Long aliasOrg = organizationService.getAlias(spaceDTO.getOrganizationId());
         if (aliasOrg == null) {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
         TenantContext.setCurrentTenant(aliasOrg);
-        Space updatedSpace = spaceService.updateSpace(id, spaceDTO);
+        Space updatedSpace = spaceService.updateSpace(Spaceid, spaceDTO);
         return ResponseEntity.ok(updatedSpace);
     }
 }

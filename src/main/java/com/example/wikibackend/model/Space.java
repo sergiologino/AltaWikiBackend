@@ -22,15 +22,19 @@ public class Space {
     @Column(nullable = false)
     private UUID authorId;
 
+    @Column(nullable = false)
+    private String description;
+
     // Конструкторы, геттеры и сеттеры
 
     public Space() {
     }
 
-    public Space(String name, LocalDateTime createdAt, UUID authorId) {
+    public Space(String name, LocalDateTime createdAt, UUID authorId, String description) {
         this.name = name;
         this.createdAt = createdAt;
         this.authorId = authorId;
+        this.description=description;
     }
 
     public UUID getId() {
@@ -63,6 +67,14 @@ public class Space {
 
     public void setAuthor(UUID authorId) {
         this.authorId = authorId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 

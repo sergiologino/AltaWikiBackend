@@ -32,6 +32,7 @@ CREATE TABLE template_schema.user_roles (
 CREATE TABLE template_schema.spaces (
                                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                           name VARCHAR(255) NOT NULL,
+                                          description VARCHAR(255),
                                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                           author_id UUID NOT NULL,
                                           CONSTRAINT fk_space_author FOREIGN KEY(author_id) REFERENCES template_schema.users(id)

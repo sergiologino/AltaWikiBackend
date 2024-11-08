@@ -2,12 +2,15 @@ package com.example.wikibackend.controller;
 
 import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserDTO;
+import com.example.wikibackend.mapper.OrganizationMapper;
+import com.example.wikibackend.model.Organization;
 import com.example.wikibackend.model.User;
 import com.example.wikibackend.model.UserAdmin;
 import com.example.wikibackend.repository.OrganizationRepository;
 import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -32,13 +35,14 @@ public class UserController {
     public UserController(UserService userService, OrganizationService organizationService) {
         this.userService = userService;
         this.organizationService = organizationService;
+
     }
 
     @Operation(summary = "Создание нового пользователя",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"organizationId\": 10, \"username\": \"Вася\", \"password\": \"123\", \"email\": \"sample@altacod.ru\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"username\": \"Вася\", \"password\": \"123\", \"email\": \"sample@altacod.ru\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан",
                             content = @Content(schema = @Schema(implementation = User.class))),
@@ -47,6 +51,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
         // Устанавливаем organizationId в TenantContext
+
         Long aliasOrg = organizationService.getAlias(userDTO.getOrganizationId());
         if (aliasOrg == null) {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
@@ -54,7 +59,8 @@ public class UserController {
         }
         TenantContext.setCurrentTenant(aliasOrg);
         System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
-        UserAdmin userAdmin=userService.addUserAdmin(userDTO);
+        //UserAdmin userAdmin=userService.addUserAdmin(userDTO);
+        TenantContext.setCurrentTenant(aliasOrg);
         User user = userService.addUser(userDTO);
 
         // Очищаем контекст после выполнения операции
@@ -66,7 +72,7 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"username\": \"john_doe\", \"password\": \"password123\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"username\": \"john_doe\", \"password\": \"password123\"}"))),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Авторизация успешна"),
                     @ApiResponse(responseCode = "401", description = "Некорректные учетные данные")
@@ -77,7 +83,7 @@ public class UserController {
         UUID organizationId = jdbcTemplate.queryForObject(sql, new Object[]{userDTO.getUsername()}, UUID.class);
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {
-            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            System.out.println("Не удалось получить организацию в методе loginUser, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
         TenantContext.setCurrentTenant(aliasOrg);
@@ -92,19 +98,32 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Получение списка всех пользователей",
+    @Operation(
+            summary = "Получение списка всех пользователей по ID организации",
+            parameters = {
+                    @Parameter(
+                            name = "organizationId",
+                            description = "UUID организации",
+                            required = true,
+                            schema = @Schema(type = "string", format = "uuid")
+                    )
+            },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Список  всех пользователей",
-                            content = @Content(schema = @Schema(implementation = User.class)))
-            })
-    @GetMapping
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Список всех пользователей",
+                            content = @Content(schema = @Schema(implementation = User.class))
+                    )
+            }
+    )
+    @GetMapping("/{organizationId}")
     public ResponseEntity<List<User>> getAllUsers(@PathVariable UUID organizationId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {
             return ResponseEntity.badRequest().build();
         }
         TenantContext.setCurrentTenant(aliasOrg);
-        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
+        System.out.println("Current tenant in controller, get all users: "+TenantContext.getCurrentTenant());
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

@@ -6,6 +6,7 @@ import com.example.wikibackend.model.Role;
 import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -31,12 +32,21 @@ public class RoleController {
         this.organizationService = organizationService;
     }
 
-    @Operation(summary = "Получить все роли",
+    @Operation(
+            summary = "Получить все роли",
+            parameters = {
+                    @Parameter(
+                            name = "organizationId",
+                            description = "UUID организации",
+                            required = true,
+                            schema = @Schema(type = "string", format = "uuid")
+                    )
+            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Список всех ролей",
                             content = @Content(schema = @Schema(implementation = Role.class)))
             })
-    @GetMapping
+    @GetMapping("/{organizationId}")
     public ResponseEntity<List<Role>> getAllRoles(@PathVariable UUID organizationId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {
@@ -50,7 +60,7 @@ public class RoleController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RoleDTO.class),
-                            examples = @ExampleObject(value = "{\"name\": \"Admin\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"name\": \"Admin\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Роль успешно добавлена",
                             content = @Content(schema = @Schema(implementation = Role.class))),

@@ -13,6 +13,9 @@ import java.util.UUID;
 public class DocumentDTO extends BaseDTO {
     private String title;
     private DocumentStatus status;
+
+
+
     private Text content;
     private UUID authorId;
     private UUID spaceId;
@@ -20,13 +23,14 @@ public class DocumentDTO extends BaseDTO {
 
     public DocumentDTO() {}
 
-    public DocumentDTO(String title, DocumentStatus status, UUID author, UUID spaceId, UUID parentId, UUID organization) {
+    public DocumentDTO(String title, DocumentStatus status, UUID author, UUID spaceId, UUID parentId, UUID organization, Text content ) {
         super(organization);
         this.title = title;
         this.status = status;
         this.authorId = author;
         this.spaceId = spaceId;
         this.parentId = parentId;
+        this.content = content;
     }
     public String getTitle() {
         return title;
@@ -68,8 +72,11 @@ public class DocumentDTO extends BaseDTO {
         this.parentId = parentId;
     }
 
-    public Text getContent() { {
-        return content;
-    }
-    }
+    public Text getContent()
+        {
+            return content;
+        }
+    public void setContent(Text content) {
+            this.content = content;
+        }
 }

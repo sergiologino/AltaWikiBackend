@@ -22,6 +22,8 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
+    @SwitchSchema
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }

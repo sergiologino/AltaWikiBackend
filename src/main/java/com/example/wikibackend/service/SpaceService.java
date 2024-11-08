@@ -23,6 +23,7 @@ public class SpaceService {
         this.spaceRepository = spaceRepository;
     }
 
+   @SwitchSchema
     public List<Space> getAllSpaces() {
         return spaceRepository.findAll();
     }
@@ -32,6 +33,7 @@ public class SpaceService {
     public Space addSpace(SpaceDTO spaceDTO) {
         Space space = new Space();
         space.setName(spaceDTO.getName());
+        space.setDescription(spaceDTO.getDescription());
         space.setAuthor(spaceDTO.getAuthorId());
         space.setCreatedAt(LocalDateTime.now());
         return spaceRepository.save(space);
@@ -39,11 +41,12 @@ public class SpaceService {
 
     @Transactional
     @SwitchSchema
-    public Space updateSpace(UUID id, SpaceDTO spaceDTO) {
-        Optional<Space> optionalSpace = spaceRepository.findById(id);
+    public Space updateSpace(UUID Spaceid, SpaceDTO spaceDTO) {
+        Optional<Space> optionalSpace = spaceRepository.findById(Spaceid);
         if (optionalSpace.isPresent()) {
             Space space = optionalSpace.get();
             space.setName(spaceDTO.getName());
+            space.setDescription(spaceDTO.getDescription());
             space.setAuthor(spaceDTO.getAuthorId());
             return spaceRepository.save(space);
         } else {

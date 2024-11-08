@@ -1,6 +1,8 @@
 package com.example.wikibackend.model;
 
 import jakarta.persistence.*;
+
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -40,4 +42,6 @@ public class Organization {
     public void setAlias(Long alias) {
         this.alias = alias;
     }
+
+
 }

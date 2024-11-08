@@ -1,5 +1,6 @@
 package com.example.wikibackend.service;
 
+import com.example.wikibackend.mapper.OrganizationMapper;
 import com.example.wikibackend.model.Organization;
 import com.example.wikibackend.repository.OrganizationRepository;
 import jakarta.transaction.Transactional;
@@ -17,8 +18,10 @@ public class OrganizationService {
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationRepository organizationRepository;
 
+
+
     @Autowired
-    public OrganizationService(JdbcTemplate jdbcTemplate, OrganizationRepository organizationRepository) {
+    public OrganizationService(JdbcTemplate jdbcTemplate, OrganizationRepository organizationRepository){
         this.jdbcTemplate = jdbcTemplate;
         this.organizationRepository = organizationRepository;
     }
@@ -69,7 +72,6 @@ public class OrganizationService {
     public Long getAlias(UUID organizationId) {
         // Ищем организацию по ID
         Optional<Organization> organizationOptional = organizationRepository.findById(organizationId);
-
         // Если организация найдена, возвращаем alias, иначе выбрасываем исключение
         if (organizationOptional.isPresent()) {
             return organizationOptional.get().getAlias(); // Предполагаем, что в Organization есть поле alias
