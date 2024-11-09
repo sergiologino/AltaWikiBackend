@@ -16,7 +16,8 @@ CREATE TABLE users (
 -- Создание таблицы ролей
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description VARCHAR(255)
 );
 
 -- Создание таблицы связывания пользователей и ролей (многие ко многим)

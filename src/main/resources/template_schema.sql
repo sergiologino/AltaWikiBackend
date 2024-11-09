@@ -16,6 +16,7 @@ CREATE TABLE template_schema.users (
 -- Таблица ролей
 CREATE TABLE template_schema.roles (
                                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                                       description VARCHAR(255),
                                        role_name VARCHAR(255) UNIQUE NOT NULL
 );
 

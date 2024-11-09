@@ -1,7 +1,10 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserRoleDTO;
 import com.example.wikibackend.model.Role;
+import com.example.wikibackend.model.User;
+import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.UserRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,23 +20,34 @@ import org.springframework.web.bind.annotation.*;
 public class UserRoleController {
 
     private final UserRoleService userRoleService;
+    private final OrganizationService organizationService;
 
     @Autowired
-    public UserRoleController(UserRoleService userRoleService) {
+    public UserRoleController(UserRoleService userRoleService, OrganizationService organizationService) {
         this.userRoleService = userRoleService;
+        this.organizationService = organizationService;
     }
 
     @Operation(summary = "Присвоить роль пользователю",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserRoleDTO.class),
-                            examples = @ExampleObject(value = "{\"userId\": 1, \"roleId\": 2}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"userId\": \"79ddc8b8-1057-43e5-9e2b-f49fe9917a36\", \"roleId\": \"d9aab576-46db-48e4-85db-2167a683ee3f\"}"))),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Роль успешно присвоена пользователю"),
                     @ApiResponse(responseCode = "404", description = "Пользователь или роль не найдены")
             })
     @PostMapping("/assign")
     public ResponseEntity<String> assignRoleToUser(@RequestBody UserRoleDTO userRoleDTO) {
+
+        Long aliasOrg = organizationService.getAlias(userRoleDTO.getOrganizationId());
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
+        TenantContext.setCurrentTenant(aliasOrg);
+        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
+
         boolean isAssigned = userRoleService.assignRoleToUser(userRoleDTO.getUserId(), userRoleDTO.getRoleId());
         if (isAssigned) {
             return ResponseEntity.ok("Роль успешно присвоена пользователю");
