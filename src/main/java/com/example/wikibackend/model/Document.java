@@ -3,6 +3,7 @@ package com.example.wikibackend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -32,7 +33,7 @@ public class Document {
 
     @ManyToOne
     @JoinColumn(name = "space_id", nullable = false)
-    private Space space;
+    private Space spaceId;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
@@ -49,7 +50,7 @@ public class Document {
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;
         this.authorId = authorId;
-        this.space = space;
+        this.spaceId = spaceId;
     }
 
     public UUID getId() {
@@ -97,15 +98,15 @@ public class Document {
     }
 
     public void setAuthor(UUID author) {
-        this.authorId = authorId;
+        this.authorId = author;
     }
 
-    public Space getSpace() {
-        return space;
+    public Space getSpaceId() {
+        return spaceId;
     }
 
-    public void setSpace(Space space) {
-        this.space = space;
+    public void setSpace(Space spaceId) {
+        this.spaceId = spaceId;
     }
 
     public Document getParent() {

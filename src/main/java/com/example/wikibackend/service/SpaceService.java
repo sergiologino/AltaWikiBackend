@@ -28,6 +28,12 @@ public class SpaceService {
         return spaceRepository.findAll();
     }
 
+    @SwitchSchema
+    public Space findSpaceById(UUID id) {
+        Optional<Space> space = spaceRepository.findById(id);
+        return space.orElse(new Space());
+    }
+
     @Transactional
     @SwitchSchema
     public Space addSpace(SpaceDTO spaceDTO) {

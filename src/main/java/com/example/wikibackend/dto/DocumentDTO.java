@@ -16,14 +16,14 @@ public class DocumentDTO extends BaseDTO {
 
 
 
-    private Text content;
+    private String content;
     private UUID authorId;
     private UUID spaceId;
     private UUID parentId;
 
     public DocumentDTO() {}
 
-    public DocumentDTO(String title, DocumentStatus status, UUID author, UUID spaceId, UUID parentId, UUID organization, Text content ) {
+    public DocumentDTO(String title, DocumentStatus status, UUID author, UUID spaceId, UUID parentId, UUID organization, String content ) {
         super(organization);
         this.title = title;
         this.status = status;
@@ -72,11 +72,11 @@ public class DocumentDTO extends BaseDTO {
         this.parentId = parentId;
     }
 
-    public Text getContent()
+    public String getContent()
         {
             return content;
         }
-    public void setContent(Text content) {
+    public void setContent(String content) {
             this.content = content;
         }
 }

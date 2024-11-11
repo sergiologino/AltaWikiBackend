@@ -16,6 +16,10 @@ spring:
       host: 213.171.12.202
       port: 27017
       database: wikicontent
+      username: altauser
+      password: AltaUser24_
+      authenticationDatabase: admin
+
 
   datasource:
     url: jdbc:postgresql://194.135.36.133:5432/wikidb

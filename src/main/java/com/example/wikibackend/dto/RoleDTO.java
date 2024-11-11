@@ -9,12 +9,14 @@ import java.util.UUID;
 @Setter
 public class RoleDTO extends BaseDTO {
     private String roleName;
+    private String roleDescription;
 
     public RoleDTO() {}
 
-    public RoleDTO(String roleName, UUID organization) {
+    public RoleDTO(String roleName, UUID organization, String roleDescription) {
         super(organization);
         this.roleName = roleName;
+        this.roleDescription = roleDescription;
     }
     public String getName() {
         return roleName;
@@ -23,5 +25,10 @@ public class RoleDTO extends BaseDTO {
     public void setName(String name) {
         this.roleName = name;
     }
+
+    public String getDescription() {return roleDescription;}
+
+    public void setDescription(String description) {this.roleDescription = description;}
+
 }
 

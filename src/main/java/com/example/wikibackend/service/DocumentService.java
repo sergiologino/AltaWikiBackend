@@ -3,14 +3,18 @@ package com.example.wikibackend.service;
 import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
+import com.example.wikibackend.model.Space;
 import com.example.wikibackend.model.mongodb.WikiContent;
 import com.example.wikibackend.repository.DocumentRepository;
+import com.example.wikibackend.repository.SpaceRepository;
 import com.example.wikibackend.repository.mongodb.WikiContentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,12 +23,14 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final WikiContentRepository wikiContentRepository;
     private final WikiContentService wikiContentService;
+    private final SpaceService spaceService;
 
     @Autowired
-    public DocumentService(DocumentRepository documentRepository, WikiContentRepository wikiContentRepository, WikiContentService wikiContentService) {
+    public DocumentService(DocumentRepository documentRepository, WikiContentRepository wikiContentRepository, WikiContentService wikiContentService, SpaceService spaceService) {
         this.documentRepository = documentRepository;
         this.wikiContentRepository = wikiContentRepository;
         this.wikiContentService = wikiContentService;
+        this.spaceService = spaceService;
     }
 
     @Transactional
@@ -33,13 +39,21 @@ public class DocumentService {
         Document document = new Document();
         document.setTitle(documentDTO.getTitle());
         document.setAuthor(documentDTO.getAuthorId());
+        document.setCreatedAt(LocalDateTime.now());
+        document.setLastModifiedAt(LocalDateTime.now());
+        document.setStatus(documentDTO.getStatus());
+        document.setSpace(spaceService.findSpaceById(documentDTO.getSpaceId()));
         // Сохранение основного документа в реляционной БД
         document = documentRepository.save(document);
+
+
 
         // Создание и сохранение содержимого документа в MongoDB
         WikiContent wikiContent = new WikiContent();
         wikiContent.setDocumentId(document.getId());
         wikiContent.setContent(documentDTO.getContent());
+        wikiContent.setStatus(documentDTO.getStatus());
+       // wikiContent.setVersion(document.g);
         wikiContentRepository.save(wikiContent);
 
         return document;
@@ -51,6 +65,7 @@ public class DocumentService {
         Document document = documentRepository.findById(id).orElseThrow(() -> new RuntimeException("Документ не найден"));
         document.setTitle(documentDTO.getTitle());
         document.setAuthor(documentDTO.getAuthorId());
+        document.setLastModifiedAt(LocalDateTime.now());
 
         // Обновление основного документа в реляционной БД
         document = documentRepository.save(document);
@@ -75,8 +90,6 @@ public class DocumentService {
 
     @SwitchSchema
     public List<Document> getAllDocuments() {
-
-
         return documentRepository.findAll();
     }
 

@@ -60,7 +60,7 @@ public class RoleController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RoleDTO.class),
-                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"name\": \"Admin\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"name\": \"Admin\", \"description\": \"Описание роли\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Роль успешно добавлена",
                             content = @Content(schema = @Schema(implementation = Role.class))),
