@@ -42,7 +42,7 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"username\": \"Вася\", \"password\": \"123\", \"email\": \"sample@altacod.ru\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"username\": \"Vasya (english only) \", \"password\": \"123\", \"email\": \"sample@altacod.ru\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан",
                             content = @Content(schema = @Schema(implementation = User.class))),
@@ -72,16 +72,17 @@ public class UserController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserDTO.class),
-                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"username\": \"john_doe\", \"password\": \"password123\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"username\": \"Сергей\", \"password\": \"123\"}"))),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Авторизация успешна"),
                     @ApiResponse(responseCode = "401", description = "Некорректные учетные данные")
             })
     @PostMapping("/login")
     public ResponseEntity<UserDTO> loginUser(@RequestBody UserDTO userDTO) {
-        String sql = "SELECT organization_id FROM admin.user_organization WHERE username = ?";
-        UUID organizationId = jdbcTemplate.queryForObject(sql, new Object[]{userDTO.getUsername()}, UUID.class);
-        Long aliasOrg = organizationService.getAlias(organizationId);
+//        String sql = "SELECT admin.organization_id FROM admin.user_organization WHERE username = ?";
+//        UUID organizationId = jdbcTemplate.queryForObject(sql, new Object[]{userDTO.getUsername()}, UUID.class);
+        UUID currentOrganizationId = userDTO.getOrganizationId();
+        Long aliasOrg = organizationService.getAlias(userDTO.getOrganizationId());
         if (aliasOrg == null) {
             System.out.println("Не удалось получить организацию в методе loginUser, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
@@ -91,7 +92,7 @@ public class UserController {
         boolean isAuthenticated = userService.authenticateUser(userDTO.getUsername(), userDTO.getPassword());
         TenantContext.clear();
         if (isAuthenticated) {
-            userDTO.setOrganization(organizationId);
+            userDTO.setOrganization(currentOrganizationId);
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.status(401).body(userDTO);
