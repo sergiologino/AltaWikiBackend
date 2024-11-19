@@ -57,6 +57,7 @@ public class UserController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
+
         TenantContext.setCurrentTenant(aliasOrg);
         System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
         //UserAdmin userAdmin=userService.addUserAdmin(userDTO);
