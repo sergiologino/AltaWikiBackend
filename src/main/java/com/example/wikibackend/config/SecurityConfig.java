@@ -52,6 +52,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true); // Если требуется отправка с учётом куки
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
