@@ -91,7 +91,7 @@ public class UserController {
         TenantContext.setCurrentTenant(aliasOrg);
         // Бизнес-логика авторизации пользователя
         boolean isAuthenticated = userService.authenticateUser(userDTO.getUsername(), userDTO.getPassword());
-        TenantContext.clear();
+        //TenantContext.clear();
         if (isAuthenticated) {
             userDTO.setOrganization(currentOrganizationId);
             return ResponseEntity.ok(userDTO);
