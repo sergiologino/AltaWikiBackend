@@ -67,8 +67,9 @@ public class UserService {
     }
 
     @SwitchSchema
-    public boolean authenticateUser(String username, String password) {
-
+    public boolean authenticateUser(String username, String password, Long aliasOrg) {
+        System.out.println("Current tenant in Userservice method authenticateUser  : "+ TenantContext.getCurrentTenant());
+        TenantContext.setCurrentTenant(aliasOrg);
         Optional<User> userOptional = userRepository.findByUsername(username);
         return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
     }

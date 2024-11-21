@@ -15,6 +15,8 @@ public class Organization {
 
     private String name; // Название организации
 
+//    @GeneratedValue(strategy = GenerationType.AUTO,generator = "my_seq")
+//    @SequenceGenerator(name = "my_seq", sequenceName = "my_seq", allocationSize = 1)
     private Long alias; // Алиас организации (долгий идентификатор)
 
     // Геттеры и сеттеры для всех полей
