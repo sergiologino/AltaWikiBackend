@@ -1,9 +1,6 @@
 package com.example.wikibackend.controller;
 
-import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserRoleDTO;
-import com.example.wikibackend.model.Role;
-import com.example.wikibackend.model.User;
 import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.UserRoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,8 +42,6 @@ public class UserRoleController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
-        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
 
         boolean isAssigned = userRoleService.assignRoleToUser(userRoleDTO.getUserId(), userRoleDTO.getRoleId());
         if (isAssigned) {

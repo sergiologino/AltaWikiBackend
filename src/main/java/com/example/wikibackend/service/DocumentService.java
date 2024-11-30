@@ -82,7 +82,7 @@ public class DocumentService {
 
     @Transactional
     @SwitchSchema
-    public boolean deleteDocument(UUID id) {
+    public boolean deleteDocument(UUID organizationId, UUID id) {
         documentRepository.deleteById(id);
         //wikiContentRepository.deleteByDocumentId(id);// установить деактуализацию вместо удаления
         return true;
@@ -94,7 +94,7 @@ public class DocumentService {
     }
 
     @SwitchSchema
-    public Document getDocumentById(UUID id) {
+    public Document getDocumentById(UUID organizationId, UUID id) {
         return documentRepository.findById(id).orElse(null);
     }
 }

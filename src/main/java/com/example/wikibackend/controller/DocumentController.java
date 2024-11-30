@@ -1,6 +1,5 @@
 package com.example.wikibackend.controller;
 
-import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
 import com.example.wikibackend.service.DocumentService;
@@ -47,9 +46,9 @@ public class DocumentController {
         if (aliasOrg == null) {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         Document document = documentService.createDocument(documentDTO);
-        TenantContext.clear();
+
         return ResponseEntity.status(201).body(document);
     }
 
@@ -72,9 +71,9 @@ public class DocumentController {
         if (aliasOrg == null) {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         Document updatedDocument = documentService.updateDocument(id, documentDTO);
-        TenantContext.clear();
+
         return ResponseEntity.ok(updatedDocument);
     }
 
@@ -92,9 +91,9 @@ public class DocumentController {
         if (aliasOrg == null) {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
-        TenantContext.setCurrentTenant(aliasOrg);
-        boolean isDeleted = documentService.deleteDocument(id);
-        TenantContext.clear();
+
+        boolean isDeleted = documentService.deleteDocument( organizationId, id);
+
         if (isDeleted) {
             return ResponseEntity.ok("Документ успешно удален");
         } else {
@@ -116,9 +115,9 @@ public class DocumentController {
         if (aliasOrg == null) {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         List<Document> documents = documentService.getAllDocuments();
-        TenantContext.clear();
+
         return ResponseEntity.ok(documents);
     }
 
@@ -137,9 +136,9 @@ public class DocumentController {
         if (aliasOrg == null) {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
-        TenantContext.setCurrentTenant(aliasOrg);
-        Document document = documentService.getDocumentById(id);
-        TenantContext.clear();
+
+        Document document = documentService.getDocumentById(organizationId, id);
+
         if (document != null) {
             return ResponseEntity.ok(document);
         } else {
