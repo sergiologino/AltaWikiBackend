@@ -1,6 +1,5 @@
 package com.example.wikibackend.controller;
 
-import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.UserSpaceAccessDTO;
 import com.example.wikibackend.model.Space;
 import com.example.wikibackend.model.UserSpaceAccess;
@@ -44,8 +43,8 @@ public class UserSpaceAccessController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
-        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
+
+
         return ResponseEntity.ok(userSpaceAccessService.getAllSpaces());
     }
 
@@ -65,8 +64,8 @@ public class UserSpaceAccessController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
-        System.out.println("Current tenant in controller: "+TenantContext.getCurrentTenant());
+
+
         return ResponseEntity.ok(userSpaceAccessService.assignSpaceAccess(userSpaceAccessDTO.getUserId(),userSpaceAccessDTO.getSpaceId(),userSpaceAccessDTO.getAccessType()));
     }
 
@@ -82,7 +81,7 @@ public class UserSpaceAccessController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         return ResponseEntity.ok(userSpaceAccessService.getUserSpaceAccesses(userId));
     }
 
@@ -98,7 +97,7 @@ public class UserSpaceAccessController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         return ResponseEntity.ok(userSpaceAccessService.getSpaceUsers(spaceId));
     }
 }

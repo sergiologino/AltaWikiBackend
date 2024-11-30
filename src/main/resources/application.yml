@@ -25,21 +25,23 @@ spring:
     url: jdbc:postgresql://194.135.36.133:5432/wikidb
     username: altauser
     password: altauser
+    driver-class-name: org.postgresql.Driver
 #    hikari:
-#      #      schema: news
-#      #      connection-ini-sql: CREATE SCHEMA IF NOT EXISTS news
-#      connection-timeout: 10000
+#      schema: alt_11
+
 
   jpa:
     properties:
       hibernate:
         multiTenancy: SCHEMA
+#        multi_tenant_connection_provider: com.example.wikibackend.config.TenantConnectionProvider
+#        tenant_identifier_resolver: com.example.wikibackend.config.TenantIdentifierResolver
         schema_management_tool:
           coordination: none
         dialect: org.hibernate.dialect.PostgreSQLDialect
         show_sql: true
         format_sql: true
-        ddl-auto: update
+        ddl-auto: none
         temp:
           use_jdbc_metadata_defaults: false
     generate-ddl: true
@@ -57,6 +59,14 @@ springdoc:
 
 logging:
   level:
+    org:
+      springframework: INFO
+      hibernate: INFO
+    com:
+      example:
+        wikibackend:
+          config: INFO
+
     root: INFO
 
 management:

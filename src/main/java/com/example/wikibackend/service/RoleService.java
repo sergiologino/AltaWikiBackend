@@ -24,7 +24,7 @@ public class RoleService {
 
     @Transactional
     @SwitchSchema
-    public List<Role> getAllRoles() {
+    public List<Role> getAllRoles(UUID organizationId) {
         return roleRepository.findAll();
     }
 

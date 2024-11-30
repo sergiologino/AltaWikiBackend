@@ -5,12 +5,12 @@ CREATE SCHEMA IF NOT EXISTS template_schema;
 
 -- Таблица пользователей
 CREATE TABLE template_schema.users (
-                                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                                       username VARCHAR(255) UNIQUE NOT NULL,
-                                       email VARCHAR(255) UNIQUE NOT NULL,
-                                       password VARCHAR(255) NOT NULL,
-                                       enabled BOOLEAN NOT NULL DEFAULT TRUE,
-                                       deleted BOOLEAN NOT NULL DEFAULT FALSE
+                                        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+                                        username varchar(255) UNIQUE NOT NULL,
+                                        email varchar(255) UNIQUE NOT NULL,
+                                        password varchar(255) NOT NULL,
+                                        enabled bool NOT NULL,
+                                        deleted bool NOT NULL
 );
 
 -- Таблица ролей
@@ -22,11 +22,9 @@ CREATE TABLE template_schema.roles (
 
 -- Таблица связей пользователей и ролей
 CREATE TABLE template_schema.user_roles (
-                                            user_id UUID NOT NULL,
-                                            role_id UUID NOT NULL,
-                                            CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES template_schema.users(id),
-                                            CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES template_schema.roles(id),
-                                            PRIMARY KEY (user_id, role_id)
+                                        user_id uuid NOT NULL REFERENCES template_schema.users(id) ON DELETE CASCADE,
+                                        role_id uuid NOT NULL REFERENCES template_schema.roles(id) ON DELETE CASCADE,
+                                        PRIMARY KEY (user_id, role_id)
 );
 
 -- Таблица разделов

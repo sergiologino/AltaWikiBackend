@@ -3,6 +3,10 @@ package com.example.wikibackend.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -10,13 +14,17 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Role {
+
     @Id
-    @GeneratedValue
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     private String role_name;
 
     private String description;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
 
     public UUID getId() {
         return id;

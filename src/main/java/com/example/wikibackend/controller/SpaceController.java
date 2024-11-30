@@ -1,6 +1,5 @@
 package com.example.wikibackend.controller;
 
-import com.example.wikibackend.config.TenantContext;
 import com.example.wikibackend.dto.SpaceDTO;
 import com.example.wikibackend.model.Space;
 import com.example.wikibackend.service.OrganizationService;
@@ -51,7 +50,7 @@ public class SpaceController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         return ResponseEntity.ok(spaceService.getAllSpaces());
     }
 
@@ -72,7 +71,7 @@ public class SpaceController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         Space space = spaceService.addSpace(spaceDTO);
         return ResponseEntity.status(201).body(space);
     }
@@ -95,7 +94,7 @@ public class SpaceController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
-        TenantContext.setCurrentTenant(aliasOrg);
+
         Space updatedSpace = spaceService.updateSpace(Spaceid, spaceDTO);
         return ResponseEntity.ok(updatedSpace);
     }
