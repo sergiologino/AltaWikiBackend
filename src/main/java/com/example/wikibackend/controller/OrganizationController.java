@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/organizations")
 public class OrganizationController {
@@ -33,5 +35,15 @@ public class OrganizationController {
         Organization createdOrganization = organizationService.registerOrganization(entityOrg);
         return ResponseEntity.ok(createdOrganization);
     }
+
+    @Operation(summary = "Получить все организации"
+           )
+    @GetMapping
+    public ResponseEntity<List<OrganizationDTO>> getOrganizations() {
+        return (ResponseEntity<List<OrganizationDTO>>) organizationService.getAllOrganizations();
+    }
+
+
+
 }
 

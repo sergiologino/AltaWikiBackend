@@ -73,7 +73,7 @@ public class DocumentController {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
 
-        Document updatedDocument = documentService.updateDocument(id, documentDTO);
+        Document updatedDocument = documentService.updateDocument(organizationId, id, documentDTO);
 
         return ResponseEntity.ok(updatedDocument);
     }
