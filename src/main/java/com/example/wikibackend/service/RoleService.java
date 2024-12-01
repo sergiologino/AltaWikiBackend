@@ -16,15 +16,18 @@ import java.util.UUID;
 public class RoleService {
 
     private final RoleRepository roleRepository;
+    private final SchemaService schemaService;
 
     @Autowired
-    public RoleService(RoleRepository roleRepository) {
+    public RoleService(RoleRepository roleRepository, SchemaService schemaService) {
         this.roleRepository = roleRepository;
+        this.schemaService = schemaService;
     }
 
     @Transactional
     @SwitchSchema
     public List<Role> getAllRoles(UUID organizationId) {
+        schemaService.setSchema(organizationId);
         return roleRepository.findAll();
     }
 
@@ -33,6 +36,7 @@ public class RoleService {
     public Role addRole(RoleDTO roleDTO) {
         Role role = new Role();
         role.setRole_name(roleDTO.getName());
+        schemaService.setSchema(roleDTO.getOrganizationId());
         return roleRepository.save(role);
     }
 
@@ -43,6 +47,7 @@ public class RoleService {
         if (optionalRole.isPresent()) {
             Role role = optionalRole.get();
             role.setRole_name(roleDTO.getName());
+            schemaService.setSchema(roleDTO.getOrganizationId());
             return roleRepository.save(role);
         } else {
             throw new IllegalArgumentException("Role not found");

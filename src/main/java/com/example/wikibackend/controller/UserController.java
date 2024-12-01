@@ -147,6 +147,49 @@ public class UserController {
             return ResponseEntity.status(404).body("Пользователь не найден");
         }
     }
+
+    @Operation(
+            summary = "Получение пользователя id и ID организации",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "UUID пользователя",
+                            required = true,
+                            schema = @Schema(type = "string", format = "uuid")
+                    ),
+                    @Parameter(
+                            name = "organizationId",
+                            description = "UUID организации",
+                            required = true,
+                            schema = @Schema(type = "string", format = "uuid")
+                    )
+
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Список всех пользователей",
+                            content = @Content(schema = @Schema(implementation = User.class))
+                    )
+            }
+    )
+    @GetMapping("/{id}{organizationId}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable UUID id, UUID organizationId) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.status(404).build();
+        }
+
+        Optional<UserDTO> foundedUser = userService.getUserById(id, organizationId);
+        if (foundedUser.isPresent()) {
+            UserDTO foundedUserDTO = new UserDTO();
+            return ResponseEntity.status(200).body(foundedUserDTO);
+        } else {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    // TODO getUserById - добавить контроллер
 }
 
 

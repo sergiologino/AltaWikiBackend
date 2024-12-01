@@ -1,6 +1,5 @@
 package com.example.wikibackend.repository;
 
-import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;

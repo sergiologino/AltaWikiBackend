@@ -42,6 +42,7 @@ public class SpaceService {
         space.setDescription(spaceDTO.getDescription());
         space.setAuthor(spaceDTO.getAuthorId());
         space.setCreatedAt(LocalDateTime.now());
+
         return spaceRepository.save(space);
     }
 

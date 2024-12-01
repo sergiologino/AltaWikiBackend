@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,16 +108,9 @@ public class DocumentController {
                             content = @Content(schema = @Schema(implementation = Document.class)))
             })
     @GetMapping
-    public ResponseEntity<?> getAllDocuments(@RequestParam UUID organizationId) {
-        if (organizationId == null) {
-            return ResponseEntity.badRequest().body("organizationId должен быть указан.");
-        }
-        Long aliasOrg = organizationService.getAlias(organizationId);
-        if (aliasOrg == null) {
-            return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
-        }
+    public ResponseEntity<List<Document>> getAllDocuments(@RequestParam UUID organizationId) {
 
-        List<Document> documents = documentService.getAllDocuments();
+        List<Document> documents = documentService.getAllDocuments(organizationId);
 
         return ResponseEntity.ok(documents);
     }
@@ -145,4 +139,5 @@ public class DocumentController {
             return ResponseEntity.status(404).body("Документ не найден");
         }
     }
+
 }

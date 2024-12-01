@@ -3,18 +3,16 @@ package com.example.wikibackend.service;
 import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
-import com.example.wikibackend.model.Space;
 import com.example.wikibackend.model.mongodb.WikiContent;
 import com.example.wikibackend.repository.DocumentRepository;
-import com.example.wikibackend.repository.SpaceRepository;
 import com.example.wikibackend.repository.mongodb.WikiContentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,13 +22,15 @@ public class DocumentService {
     private final WikiContentRepository wikiContentRepository;
     private final WikiContentService wikiContentService;
     private final SpaceService spaceService;
+    private final SchemaService schemaService;
 
     @Autowired
-    public DocumentService(DocumentRepository documentRepository, WikiContentRepository wikiContentRepository, WikiContentService wikiContentService, SpaceService spaceService) {
+    public DocumentService(DocumentRepository documentRepository, WikiContentRepository wikiContentRepository, WikiContentService wikiContentService, SpaceService spaceService, SchemaService schemaService) {
         this.documentRepository = documentRepository;
         this.wikiContentRepository = wikiContentRepository;
         this.wikiContentService = wikiContentService;
         this.spaceService = spaceService;
+        this.schemaService = schemaService;
     }
 
     @Transactional
@@ -43,7 +43,9 @@ public class DocumentService {
         document.setLastModifiedAt(LocalDateTime.now());
         document.setStatus(documentDTO.getStatus());
         document.setSpace(spaceService.findSpaceById(documentDTO.getSpaceId()));
+
         // Сохранение основного документа в реляционной БД
+        schemaService.setSchema(documentDTO.getOrganizationId());
         document = documentRepository.save(document);
 
 
@@ -68,6 +70,9 @@ public class DocumentService {
         document.setLastModifiedAt(LocalDateTime.now());
 
         // Обновление основного документа в реляционной БД
+        document.setStatus(documentDTO.getStatus());
+        document.setSpace(spaceService.findSpaceById(documentDTO.getSpaceId()));
+        schemaService.setSchema(documentDTO.getOrganizationId());
         document = documentRepository.save(document);
 
         // Обновление содержимого документа в MongoDB
@@ -83,13 +88,15 @@ public class DocumentService {
     @Transactional
     @SwitchSchema
     public boolean deleteDocument(UUID organizationId, UUID id) {
+        schemaService.setSchema(organizationId);
         documentRepository.deleteById(id);
         //wikiContentRepository.deleteByDocumentId(id);// установить деактуализацию вместо удаления
         return true;
     }
 
     @SwitchSchema
-    public List<Document> getAllDocuments() {
+    public List<Document> getAllDocuments(UUID organizationId) {
+        schemaService.setSchema(organizationId);
         return documentRepository.findAll();
     }
 
