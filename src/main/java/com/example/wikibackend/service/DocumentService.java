@@ -103,6 +103,7 @@ public class DocumentService {
 
     @SwitchSchema
     public Document getDocumentById(UUID organizationId, UUID id) {
+        schemaService.setSchema(organizationId);
         return documentRepository.findById(id).orElse(null);
     }
 }

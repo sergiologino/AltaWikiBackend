@@ -51,7 +51,7 @@ public class SpaceController {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(spaceService.getAllSpaces());
+        return ResponseEntity.ok(spaceService.getAllSpaces(organizationId));
     }
 
     @Operation(summary = "Добавить новый раздел",
@@ -97,6 +97,17 @@ public class SpaceController {
 
         Space updatedSpace = spaceService.updateSpace(Spaceid, spaceDTO);
         return ResponseEntity.ok(updatedSpace);
+    }
+
+    @GetMapping("/{organizationId}{id}")
+    public ResponseEntity<SpaceDTO> getSpace(@PathVariable UUID organizationId, @PathVariable UUID id) {
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            System.out.println("Не удалось получить организацию, проверьте авторизацию");
+            return ResponseEntity.badRequest().build();
+        }
+        SpaceDTO spaceDTO = spaceService.findSpaceById(organizationId, id);
+        return ResponseEntity.ok(spaceDTO);
     }
 }
 

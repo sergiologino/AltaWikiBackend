@@ -2,6 +2,7 @@ package com.example.wikibackend.service;
 
 import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.SpaceDTO;
+import com.example.wikibackend.mapper.SpaceMapper;
 import com.example.wikibackend.model.Space;
 import com.example.wikibackend.repository.SpaceRepository;
 import jakarta.transaction.Transactional;
@@ -14,24 +15,35 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+
+
 public class SpaceService {
 
     private final SpaceRepository spaceRepository;
+    private final SchemaService schemaService;
+    private final SpaceMapper spaceMapper;
 
     @Autowired
-    public SpaceService(SpaceRepository spaceRepository) {
+    public SpaceService(SpaceRepository spaceRepository, SchemaService schemaService, SpaceMapper spaceMapper) {
         this.spaceRepository = spaceRepository;
+        this.schemaService = schemaService;
+        this.spaceMapper = spaceMapper;
     }
 
    @SwitchSchema
-    public List<Space> getAllSpaces() {
+    public List<Space> getAllSpaces(UUID organizationId) {
+        schemaService.setSchema(organizationId);
         return spaceRepository.findAll();
     }
 
     @SwitchSchema
-    public Space findSpaceById(UUID id) {
+    public SpaceDTO findSpaceById(UUID organizationId, UUID id) {
+        schemaService.setSchema(organizationId);
         Optional<Space> space = spaceRepository.findById(id);
-        return space.orElse(new Space());
+        Space foundedSpace = space.orElse(new Space());
+        SpaceDTO spaceDTO = new SpaceDTO();
+        spaceDTO =spaceMapper.toDTO(foundedSpace);
+        return spaceDTO;
     }
 
     @Transactional
