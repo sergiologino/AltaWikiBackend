@@ -48,7 +48,7 @@ public class DocumentController {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
 
-        Document document = documentService.createDocument(documentDTO);
+        Document document = documentService.createDocument(documentDTO.getOrganizationId(), documentDTO);
 
         return ResponseEntity.status(201).body(document);
     }
@@ -64,16 +64,16 @@ public class DocumentController {
                     @ApiResponse(responseCode = "404", description = "Документ не найден")
             })
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateDocument(@RequestParam UUID organizationId, @PathVariable UUID id, @RequestBody DocumentDTO documentDTO) {
-        if (organizationId == null) {
+    public ResponseEntity<?> updateDocument(@PathVariable UUID id, @RequestBody DocumentDTO documentDTO) {
+        if (documentDTO.getOrganizationId() == null) {
             return ResponseEntity.badRequest().body("organizationId должен быть указан.");
         }
-        Long aliasOrg = organizationService.getAlias(organizationId);
+        Long aliasOrg = organizationService.getAlias(documentDTO.getOrganizationId());
         if (aliasOrg == null) {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
 
-        Document updatedDocument = documentService.updateDocument(organizationId, id, documentDTO);
+        Document updatedDocument = documentService.updateDocument(id, documentDTO);
 
         return ResponseEntity.ok(updatedDocument);
     }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 
 @AllArgsConstructor
-@NoArgsConstructor
+
 public class SpaceMapper {
 
     // Преобразование DTO в сущность
