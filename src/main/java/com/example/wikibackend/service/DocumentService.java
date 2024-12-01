@@ -98,6 +98,7 @@ public class DocumentService {
     public List<Document> getAllDocuments(UUID organizationId) {
         schemaService.setSchema(organizationId);
         return documentRepository.findAll();
+
     }
 
     @SwitchSchema
