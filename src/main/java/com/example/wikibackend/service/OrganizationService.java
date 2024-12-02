@@ -1,6 +1,5 @@
 package com.example.wikibackend.service;
 
-import com.example.wikibackend.mapper.OrganizationMapper;
 import com.example.wikibackend.model.Organization;
 import com.example.wikibackend.repository.OrganizationRepository;
 import jakarta.transaction.Transactional;

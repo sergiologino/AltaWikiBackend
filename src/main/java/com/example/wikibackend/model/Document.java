@@ -11,9 +11,9 @@ import java.util.UUID;
 public class Document {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id",nullable = false)
-    private UUID id = UUID.randomUUID(); // Генерация UUID на стороне Java
+    private UUID id; // Генерация UUID на стороне Java
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -31,13 +31,13 @@ public class Document {
     @Column(name = "author_id",nullable = false)
     private UUID authorId;
 
-    @ManyToOne
-    @JoinColumn(name = "space_id", nullable = false)
-    private Space spaceId;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Document parent;
+    @Column(name = "space_id", nullable = false)
+    private UUID spaceId;
+
+
+    @Column(name = "parent_id")
+    private UUID parent;
 
     // Конструкторы, геттеры и сеттеры
 
@@ -101,19 +101,19 @@ public class Document {
         this.authorId = author;
     }
 
-    public Space getSpaceId() {
+    public UUID getSpaceId() {
         return spaceId;
     }
 
-    public void setSpace(Space spaceId) {
+    public void setSpace(UUID spaceId) {
         this.spaceId = spaceId;
     }
 
-    public Document getParent() {
+    public UUID getParent() {
         return parent;
     }
 
-    public void setParent(Document parent) {
+    public void setParent(UUID parent) {
         this.parent = parent;
     }
 }

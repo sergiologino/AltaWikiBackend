@@ -2,13 +2,14 @@ package com.example.wikibackend.mapper;
 
 import com.example.wikibackend.dto.SpaceDTO;
 import com.example.wikibackend.model.Space;
+import com.example.wikibackend.service.SpaceService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-
-@AllArgsConstructor
-
+@Component
 public class SpaceMapper {
+
 
     // Преобразование DTO в сущность
     public Space toEntity(SpaceDTO spaceDTO) {

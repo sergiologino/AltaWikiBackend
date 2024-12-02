@@ -3,6 +3,7 @@ package com.example.wikibackend.controller;
 import com.example.wikibackend.dto.SpaceDTO;
 import com.example.wikibackend.model.Space;
 import com.example.wikibackend.service.OrganizationService;
+import com.example.wikibackend.service.SchemaService;
 import com.example.wikibackend.service.SpaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,9 +26,10 @@ public class SpaceController {
     private final OrganizationService organizationService;
 
     @Autowired
-    public SpaceController(SpaceService spaceService, OrganizationService organizationService) {
+    public SpaceController(SpaceService spaceService, OrganizationService organizationService, SchemaService schemaService) {
         this.spaceService = spaceService;
         this.organizationService = organizationService;
+
     }
 
     @Operation(summary = "Получить все разделы",
@@ -43,13 +45,15 @@ public class SpaceController {
                     @ApiResponse(responseCode = "200", description = "Список всех разделов",
                             content = @Content(schema = @Schema(implementation = Space.class)))
             })
-    @GetMapping("/organizationId")
+    @GetMapping("/{organizationId}")
     public ResponseEntity<List<Space>> getAllSpaces(@PathVariable UUID organizationId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
+
             return ResponseEntity.badRequest().build();
         }
+
 
         return ResponseEntity.ok(spaceService.getAllSpaces(organizationId));
     }
@@ -71,6 +75,7 @@ public class SpaceController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
+
 
         Space space = spaceService.addSpace(spaceDTO);
         return ResponseEntity.status(201).body(space);
@@ -95,10 +100,24 @@ public class SpaceController {
             return ResponseEntity.badRequest().build();
         }
 
+
         Space updatedSpace = spaceService.updateSpace(Spaceid, spaceDTO);
         return ResponseEntity.ok(updatedSpace);
     }
 
+    @Operation(summary = "Получить раздел по id",
+            parameters = {
+                    @Parameter(
+                            name = "organizationId",
+                            description = "UUID организации",
+                            required = true,
+                            schema = @Schema(type = "string", format = "uuid"))
+
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Раздел изменен успешно",
+                            content = @Content(schema = @Schema(implementation = Space.class)))
+            })
     @GetMapping("/{organizationId}{id}")
     public ResponseEntity<SpaceDTO> getSpace(@PathVariable UUID organizationId, @PathVariable UUID id) {
         Long aliasOrg = organizationService.getAlias(organizationId);
@@ -106,6 +125,7 @@ public class SpaceController {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
             return ResponseEntity.badRequest().build();
         }
+
         SpaceDTO spaceDTO = spaceService.findSpaceById(organizationId, id);
         return ResponseEntity.ok(spaceDTO);
     }

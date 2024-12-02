@@ -38,14 +38,15 @@ public class DocumentService {
 
     @Transactional
     @SwitchSchema
-    public Document createDocument(UUID organizationId, DocumentDTO documentDTO) {
+    public Document createDocument(DocumentDTO documentDTO) {
         Document document = new Document();
         document.setTitle(documentDTO.getTitle());
         document.setAuthor(documentDTO.getAuthorId());
         document.setCreatedAt(LocalDateTime.now());
         document.setLastModifiedAt(LocalDateTime.now());
         document.setStatus(documentDTO.getStatus());
-        document.setSpace(spaceMapper.toEntity(spaceService.findSpaceById(documentDTO.getOrganizationId(), documentDTO.getSpaceId())));
+        document.setSpace(documentDTO.getSpaceId());
+        document.setParent(documentDTO.getParentId());
 
         // Сохранение основного документа в реляционной БД
         schemaService.setSchema(documentDTO.getOrganizationId());
@@ -74,7 +75,7 @@ public class DocumentService {
 
         // Обновление основного документа в реляционной БД
         document.setStatus(documentDTO.getStatus());
-        document.setSpace(spaceMapper.toEntity(spaceService.findSpaceById(documentDTO.getOrganizationId(),documentDTO.getSpaceId())));
+        document.setSpace(documentDTO.getSpaceId());
         schemaService.setSchema(documentDTO.getOrganizationId());
         document = documentRepository.save(document);
 
@@ -97,6 +98,7 @@ public class DocumentService {
         return true;
     }
 
+    @Transactional
     @SwitchSchema
     public List<Document> getAllDocuments(UUID organizationId) {
         schemaService.setSchema(organizationId);

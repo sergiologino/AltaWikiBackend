@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DocumentRepository extends JpaRepository<Document, UUID> {
-    List<Document> findByParentId(UUID parentId);
+  //  List<Document> findByParentId(UUID parentId);
 
     List <Document> findByTitleContaining(String name);
 }

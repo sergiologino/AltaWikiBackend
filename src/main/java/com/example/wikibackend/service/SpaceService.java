@@ -17,6 +17,7 @@ import java.util.UUID;
 @Service
 
 
+
 public class SpaceService {
 
     private final SpaceRepository spaceRepository;
@@ -30,12 +31,14 @@ public class SpaceService {
         this.spaceMapper = spaceMapper;
     }
 
-   @SwitchSchema
+    @Transactional
+    @SwitchSchema
     public List<Space> getAllSpaces(UUID organizationId) {
         schemaService.setSchema(organizationId);
         return spaceRepository.findAll();
     }
 
+    @Transactional
     @SwitchSchema
     public SpaceDTO findSpaceById(UUID organizationId, UUID id) {
         schemaService.setSchema(organizationId);
@@ -54,19 +57,21 @@ public class SpaceService {
         space.setDescription(spaceDTO.getDescription());
         space.setAuthor(spaceDTO.getAuthorId());
         space.setCreatedAt(LocalDateTime.now());
-
+        schemaService.setSchema(spaceDTO.getOrganizationId());
         return spaceRepository.save(space);
     }
 
     @Transactional
     @SwitchSchema
     public Space updateSpace(UUID Spaceid, SpaceDTO spaceDTO) {
+
         Optional<Space> optionalSpace = spaceRepository.findById(Spaceid);
         if (optionalSpace.isPresent()) {
             Space space = optionalSpace.get();
             space.setName(spaceDTO.getName());
             space.setDescription(spaceDTO.getDescription());
             space.setAuthor(spaceDTO.getAuthorId());
+            schemaService.setSchema(spaceDTO.getOrganizationId());
             return spaceRepository.save(space);
         } else {
             throw new IllegalArgumentException("Space not found");
