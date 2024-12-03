@@ -125,9 +125,13 @@ public class UserService {
     @SwitchSchema
     public Optional<UserDTO> getUserById(UUID id, UUID organizationId) {
         schemaService.setSchema(organizationId);
-        return Optional.ofNullable(userMapper.toDTO(userRepository.findById(id).orElse(null)));
-
-
+        Optional<User> foundedUser = userRepository.findById(id);
+        if (foundedUser.isPresent()) {
+            UserDTO foundedUserDTO = userMapper.toDTO(foundedUser.get());
+            return Optional.ofNullable(foundedUserDTO);
+        }else{
+            return Optional.empty();
+        }
     }
 }
 

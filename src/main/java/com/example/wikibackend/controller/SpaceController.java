@@ -43,10 +43,10 @@ public class SpaceController {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Список всех разделов",
-                            content = @Content(schema = @Schema(implementation = Space.class)))
+                            content = @Content(schema = @Schema(implementation = SpaceDTO.class)))
             })
     @GetMapping("/{organizationId}")
-    public ResponseEntity<List<Space>> getAllSpaces(@PathVariable UUID organizationId) {
+    public ResponseEntity<List<SpaceDTO>> getAllSpaces(@PathVariable UUID organizationId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {
             System.out.println("Не удалось получить организацию, проверьте авторизацию");
@@ -118,7 +118,7 @@ public class SpaceController {
                     @ApiResponse(responseCode = "200", description = "Раздел изменен успешно",
                             content = @Content(schema = @Schema(implementation = Space.class)))
             })
-    @GetMapping("/{organizationId}{id}")
+    @GetMapping("/{organizationId}/{id}")
     public ResponseEntity<SpaceDTO> getSpace(@PathVariable UUID organizationId, @PathVariable UUID id) {
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {

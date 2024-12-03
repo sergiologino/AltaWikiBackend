@@ -1,9 +1,7 @@
 package com.example.wikibackend.controller;
 
-import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.model.User;
-import com.example.wikibackend.model.UserAdmin;
 import com.example.wikibackend.service.OrganizationService;
 import com.example.wikibackend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -149,7 +147,7 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Получение пользователя id и ID организации",
+            summary = "Получение пользователя по id и id организации",
             parameters = {
                     @Parameter(
                             name = "id",
@@ -169,12 +167,12 @@ public class UserController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Список всех пользователей",
-                            content = @Content(schema = @Schema(implementation = User.class))
+                            content = @Content(schema = @Schema(implementation = UserDTO.class))
                     )
             }
     )
-    @GetMapping("/{id}{organizationId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable UUID id, UUID organizationId) {
+    @GetMapping("/{id}/{organizationId}")
+    public ResponseEntity<Optional<UserDTO>> getUserById(@PathVariable UUID id, @PathVariable UUID organizationId) {
         Long aliasOrg = organizationService.getAlias(organizationId);
         if (aliasOrg == null) {
             return ResponseEntity.status(404).build();
@@ -182,14 +180,14 @@ public class UserController {
 
         Optional<UserDTO> foundedUser = userService.getUserById(id, organizationId);
         if (foundedUser.isPresent()) {
-            UserDTO foundedUserDTO = new UserDTO();
-            return ResponseEntity.status(200).body(foundedUserDTO);
+
+            return ResponseEntity.status(200).body(foundedUser);
         } else {
             return ResponseEntity.status(404).build();
         }
     }
 
-    // TODO getUserById - добавить контроллер
+
 }
 
 

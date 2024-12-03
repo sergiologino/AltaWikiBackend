@@ -2,6 +2,8 @@ package com.example.wikibackend.service;
 
 import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.SpaceDTO;
+import com.example.wikibackend.mapper.AbstractConverter;
+import com.example.wikibackend.mapper.SpaceConverter;
 import com.example.wikibackend.mapper.SpaceMapper;
 import com.example.wikibackend.model.Space;
 import com.example.wikibackend.repository.SpaceRepository;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,19 +26,24 @@ public class SpaceService {
     private final SpaceRepository spaceRepository;
     private final SchemaService schemaService;
     private final SpaceMapper spaceMapper;
+    private final SpaceConverter spaceConverter;
+    private final AbstractConverter abstractConverter;
 
     @Autowired
-    public SpaceService(SpaceRepository spaceRepository, SchemaService schemaService, SpaceMapper spaceMapper) {
+    public SpaceService(SpaceRepository spaceRepository, SchemaService schemaService, SpaceMapper spaceMapper, SpaceConverter spaceConverter, AbstractConverter abstractConverter) {
         this.spaceRepository = spaceRepository;
         this.schemaService = schemaService;
         this.spaceMapper = spaceMapper;
+        this.spaceConverter = spaceConverter;
+        this.abstractConverter = abstractConverter;
     }
 
     @Transactional
     @SwitchSchema
-    public List<Space> getAllSpaces(UUID organizationId) {
+    public List<SpaceDTO> getAllSpaces(UUID organizationId) {
         schemaService.setSchema(organizationId);
-        return spaceRepository.findAll();
+        List<Space> spaces = spaceRepository.findAll();
+        return abstractConverter.toDTOs(spaces);
     }
 
     @Transactional
@@ -45,7 +53,7 @@ public class SpaceService {
         Optional<Space> space = spaceRepository.findById(id);
         Space foundedSpace = space.orElse(new Space());
         SpaceDTO spaceDTO = new SpaceDTO();
-        spaceDTO =spaceMapper.toDTO(foundedSpace);
+        spaceDTO =spaceConverter.toDTO(foundedSpace);
         return spaceDTO;
     }
 

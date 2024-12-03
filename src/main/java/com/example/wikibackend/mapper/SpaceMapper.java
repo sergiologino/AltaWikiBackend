@@ -22,12 +22,12 @@ public class SpaceMapper {
     }
 
     // Преобразование сущности  в DTO
-    public SpaceDTO toDTO(Space space) {
-        SpaceDTO newSpaceDTO =new SpaceDTO();
-        newSpaceDTO.setDescription(space.getDescription());
-        newSpaceDTO.setAuthorId(space.getAuthor());
-        newSpaceDTO.setSpaceName(space.getName());
-        return newSpaceDTO;
-    }
+//    public SpaceDTO toDTO(Space space) {
+//        SpaceDTO newSpaceDTO =new SpaceDTO();
+//        newSpaceDTO.setDescription(space.getDescription());
+//        newSpaceDTO.setAuthorId(space.getAuthor());
+//        newSpaceDTO.setSpaceName(space.getName());
+//        return newSpaceDTO;
+//    }
 }
 
