@@ -74,3 +74,8 @@ management:
     web:
       exposure:
         include: "*"
+jwt:
+  secret: your-secret-key
+  expiration:
+    access: 3600000 # 1 hour in milliseconds
+    refresh: 86400000 # 1 day in milliseconds

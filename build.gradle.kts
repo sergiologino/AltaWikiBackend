@@ -61,6 +61,10 @@ dependencies {
     // Logback for JSON logging
     implementation("net.logstash.logback:logstash-logback-encoder:6.6")
 
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5") // Для работы с JSON через Jackson
+
     compileOnly("org.projectlombok:lombok")
     runtimeOnly ("org.postgresql:postgresql")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
