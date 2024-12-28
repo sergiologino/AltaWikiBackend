@@ -11,5 +11,9 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
   //  List<Document> findByParentId(UUID parentId);
 
     List <Document> findByTitleContaining(String name);
+
+    // Метод для получения всех документов по Space ID
+    List<Document> findBySpaceId(UUID spaceId);
+
 }
 

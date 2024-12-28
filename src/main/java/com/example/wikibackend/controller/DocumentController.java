@@ -2,6 +2,7 @@ package com.example.wikibackend.controller;
 
 import com.example.wikibackend.dto.DocumentAccessDTO;
 import com.example.wikibackend.dto.DocumentDTO;
+import com.example.wikibackend.dto.RoleAccessDTO;
 import com.example.wikibackend.model.Document;
 import com.example.wikibackend.service.DocumentService;
 import com.example.wikibackend.service.OrganizationService;
@@ -195,10 +196,37 @@ public class DocumentController {
         },
             "accessType": "FULL_ACCESS"
         }*/
-]
+
 
         //---------------
     }
+
+    @Operation(summary = "Получение ролей, влияющих на документ",
+            parameters = {
+                    @Parameter(name = "documentId", description = "ID документа", required = true, schema = @Schema(type = "string", format = "uuid")),
+                    @Parameter(name = "organizationId", description = "ID организации", required = true, schema = @Schema(type = "string", format = "uuid"))
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Список ролей с их типами доступа", content = @Content(schema = @Schema(implementation = RoleAccessDTO.class))),
+                    @ApiResponse(responseCode = "404", description = "Документ или организация не найдены")
+            })
+    @GetMapping("/{documentId}/roles")
+    public ResponseEntity<List<RoleAccessDTO>> getRolesForDocument(
+            @PathVariable UUID documentId,
+            @RequestParam UUID organizationId) {
+
+        // Проверка наличия организации
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        // Получение ролей, влияющих на документ
+        List<RoleAccessDTO> roleAccessList = documentService.getRolesForDocument(documentId, organizationId);
+
+        return ResponseEntity.ok(roleAccessList);
+    }
+
 
 
 }

@@ -3,6 +3,7 @@ package com.example.wikibackend.service;
 import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.DocumentAccessDTO;
 import com.example.wikibackend.dto.DocumentDTO;
+import com.example.wikibackend.dto.RoleAccessDTO;
 import com.example.wikibackend.mapper.DocumentMapper;
 import com.example.wikibackend.mapper.SpaceMapper;
 import com.example.wikibackend.model.*;
@@ -157,21 +158,11 @@ public class DocumentService {
                 .flatMap(role -> role.getDocumentAccesses().stream())
                 .collect(Collectors.toList());
 
-        // Фильтрация документов с учетом приоритетов
+        // Рекурсивное определение доступов, включая родителей и секции
         Map<UUID, DocumentAccessDTO> documentAccessMap = new HashMap<>();
         for (RoleDocumentAccess access : roleDocumentAccesses) {
             UUID documentId = access.getDocument().getId();
-            AccessType currentAccessType = documentAccessMap.containsKey(documentId)
-                    ? AccessType.valueOf(documentAccessMap.get(documentId).getAccessType())
-                    : AccessType.DENIED;
-
-            // Логика приоритета доступа
-            if (access.getAccessType().ordinal() < currentAccessType.ordinal()) {
-                DocumentAccessDTO dto = new DocumentAccessDTO();
-                dto.setDocument(documentMapper.toDTO(access.getDocument()));
-                dto.setAccessType(access.getAccessType() == AccessType.READ ? "READ" : "FULL_ACCESS");
-                documentAccessMap.put(documentId, dto);
-            }
+            processDocumentAccess(access.getDocument(), access.getAccessType(), documentAccessMap, roles);
         }
 
         // Исключение документов с доступом DENIED
@@ -179,4 +170,73 @@ public class DocumentService {
                 .filter(dto -> !dto.getAccessType().equals("DENIED"))
                 .collect(Collectors.toList());
     }
+
+    private void processDocumentAccess(Document document, AccessType accessType,
+                                       Map<UUID, DocumentAccessDTO> documentAccessMap, Set<Role> roles) {
+        // Если доступ уже установлен и текущий уровень ниже, ничего не меняем
+        if (documentAccessMap.containsKey(document.getId()) &&
+                documentAccessMap.get(document.getId()).getAccessType().equals("DENIED")) {
+            return;
+        }
+
+        // Устанавливаем или обновляем доступ
+        DocumentAccessDTO dto = new DocumentAccessDTO();
+        dto.setDocument(documentMapper.toDTO(document));
+        dto.setAccessType(accessType == AccessType.READ ? "READ" : "FULL_ACCESS");
+        documentAccessMap.put(document.getId(), dto);
+
+        // Рекурсивно обрабатываем родителя
+        if (document.getParent() != null) {
+            Document parentDocument = documentRepository.findById(document.getParent())
+                    .orElseThrow(() -> new RuntimeException("Родительский документ не найден"));
+            processDocumentAccess(parentDocument, accessType, documentAccessMap, roles);
+        }
+
+        // Обрабатываем все документы в той же секции (если применимо)
+        List<Document> sectionDocuments = documentRepository.findBySpaceId(document.getSpaceId());
+        for (Document sectionDocument : sectionDocuments) {
+            if (!documentAccessMap.containsKey(sectionDocument.getId())) {
+                processDocumentAccess(sectionDocument, accessType, documentAccessMap, roles);
+            }
+        }
+    }
+
+    @Transactional
+    @SwitchSchema
+    public List<RoleAccessDTO> getRolesForDocument(UUID documentId, UUID organizationId) {
+        // Установка схемы для организации
+        schemaService.setSchema(organizationId);
+
+        // Получение документа
+        Document document = documentRepository.findById(documentId)
+                .orElseThrow(() -> new RuntimeException("Документ не найден"));
+
+        // Рекурсивное получение ролей, влияющих на документ
+        Set<RoleDocumentAccess> roleAccesses = new HashSet<>();
+        collectRoleAccesses(document, roleAccesses);
+
+        // Преобразование в DTO
+        return roleAccesses.stream()
+                .map(access -> {
+                    RoleAccessDTO dto = new RoleAccessDTO();
+                    dto.setRoleId(access.getRole().getId());
+                    dto.setRoleName(access.getRole().getRole_name());
+                    dto.setAccessType(access.getAccessType().toString());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private void collectRoleAccesses(Document document, Set<RoleDocumentAccess> roleAccesses) {
+        // Добавляем текущие роли
+        roleAccesses.addAll(document.getRoleAccesses());
+
+        // Рекурсивно обрабатываем родителя
+        if (document.getParent() != null) {
+            Document parentDocument = documentRepository.findById(document.getParent())
+                    .orElseThrow(() -> new RuntimeException("Родительский документ не найден"));
+            collectRoleAccesses(parentDocument, roleAccesses);
+        }
+    }
+
 }
