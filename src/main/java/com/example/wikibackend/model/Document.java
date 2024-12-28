@@ -3,7 +3,9 @@ package com.example.wikibackend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +40,10 @@ public class Document {
 
     @Column(name = "parent_id")
     private UUID parent;
+
+    // Добавляем связь с RoleDocumentAccess
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoleDocumentAccess> roleAccesses = new ArrayList<>();
 
     // Конструкторы, геттеры и сеттеры
 
@@ -115,6 +121,14 @@ public class Document {
 
     public void setParent(UUID parent) {
         this.parent = parent;
+    }
+
+    public List<RoleDocumentAccess> getRoleAccesses() {
+        return roleAccesses;
+    }
+
+    public void setRoleAccesses(List<RoleDocumentAccess> roleAccesses) {
+        this.roleAccesses = roleAccesses;
     }
 }
 
