@@ -6,6 +6,7 @@ import com.example.wikibackend.model.Comment;
 import com.example.wikibackend.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +25,7 @@ public class CommentService {
         this.commentMapper = commentMapper;
     }
 
+    @Transactional
     public CommentDTO createComment(CommentDTO commentDTO) {
         Comment comment = commentMapper.toEntity(commentDTO);
         comment.setCreatedAt(LocalDateTime.now());

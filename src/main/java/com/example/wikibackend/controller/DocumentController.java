@@ -1,10 +1,12 @@
 package com.example.wikibackend.controller;
 
+import com.example.wikibackend.dto.DocumentAccessDTO;
 import com.example.wikibackend.dto.DocumentDTO;
 import com.example.wikibackend.model.Document;
 import com.example.wikibackend.service.DocumentService;
 import com.example.wikibackend.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -139,5 +141,64 @@ public class DocumentController {
             return ResponseEntity.status(404).body("Документ не найден");
         }
     }
+
+    @Operation(summary = "Получение документов с доступом для пользователя",
+            parameters = {
+                    @Parameter(name = "userId", description = "ID пользователя", required = true, schema = @Schema(type = "string", format = "uuid")),
+                    @Parameter(name = "organizationId", description = "ID организации", required = true, schema = @Schema(type = "string", format = "uuid"))
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Список документов с их типами доступа", content = @Content(schema = @Schema(implementation = DocumentAccessDTO.class))),
+                    @ApiResponse(responseCode = "404", description = "Пользователь или организация не найдены")
+            })
+    @GetMapping("/user/{userId}/documents")
+    public ResponseEntity<List<DocumentAccessDTO>> getDocumentsForUser(
+            @PathVariable UUID userId,
+            @RequestParam UUID organizationId) {
+
+        // Проверка наличия организации
+        Long aliasOrg = organizationService.getAlias(organizationId);
+        if (aliasOrg == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        // Получение документов с учетом доступа
+        List<DocumentAccessDTO> accessibleDocuments = documentService.getDocumentsForUserWithAccess(userId, organizationId);
+
+        return ResponseEntity.ok(accessibleDocuments);
+
+        // пример ответа API
+      /*  [
+        {
+            "document": {
+            "id": "79ddc8b8-1057-43e5-9e2b-f49fe9917a36",
+                    "title": "Документ 1",
+                    "status": "ACTIVE",
+                    "authorId": "f49fe9917a36",
+                    "spaceId": "e4bdb4e0-bd46",
+                    "parentId": null,
+                    "createdAt": "2023-12-01T12:00:00",
+                    "lastModifiedAt": "2023-12-15T12:00:00"
+        },
+            "accessType": "READ"
+        },
+        {
+            "document": {
+            "id": "23ddc8b8-1057-43e5-9e2b-f49fe9917b23",
+                    "title": "Документ 2",
+                    "status": "ACTIVE",
+                    "authorId": "a49fe9917a36",
+                    "spaceId": "b4bdb4e0-bd46",
+                    "parentId": null,
+                    "createdAt": "2023-12-01T12:00:00",
+                    "lastModifiedAt": "2023-12-15T12:00:00"
+        },
+            "accessType": "FULL_ACCESS"
+        }*/
+]
+
+        //---------------
+    }
+
 
 }

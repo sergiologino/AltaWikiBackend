@@ -14,10 +14,12 @@ CREATE TABLE template_schema.users (
 );
 
 -- Таблица ролей
-CREATE TABLE template_schema.roles (
-                                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                                       description VARCHAR(255),
-                                       role_name VARCHAR(255) UNIQUE NOT NULL
+CREATE TABLE roles (
+                                        id UUID PRIMARY KEY, -- Идентификатор роли
+                                        role_name VARCHAR(255) NOT NULL, -- Название роли
+                                        description TEXT, -- Описание роли
+                                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Дата создания
+                                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Дата обновления
 );
 
 -- Таблица связей пользователей и ролей
@@ -54,10 +56,33 @@ CREATE TABLE template_schema.documents (
 
 -- Таблица доступа к пространствам (user_space_access)
 CREATE TABLE template_schema.user_space_access (
-                                                   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                                                   user_id UUID NOT NULL REFERENCES template_schema.users(id) ON DELETE CASCADE,
-                                                   space_id UUID NOT NULL REFERENCES template_schema.spaces(id) ON DELETE CASCADE,
-                                                   access_type VARCHAR(50) NOT NULL CHECK (access_type IN ('READ', 'WRITE', 'ADMIN'))
+                                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                                           user_id UUID NOT NULL REFERENCES template_schema.users(id) ON DELETE CASCADE,
+                                           space_id UUID NOT NULL REFERENCES template_schema.spaces(id) ON DELETE CASCADE,
+                                           access_type VARCHAR(50) NOT NULL CHECK (access_type IN ('READ', 'WRITE', 'ADMIN'))
+);
+
+CREATE TABLE comments (
+                                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- Уникальный идентификатор комментария
+                                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Дата создания комментария
+                                            updated_at TIMESTAMP, -- Дата последнего изменения
+                                            is_resolved BOOLEAN NOT NULL DEFAULT FALSE, -- Признак "решён/не решён"
+                                            anchor TEXT, -- Якорь, привязка к месту в документе
+                                            author_id UUID NOT NULL, -- ID автора комментария
+                                            parent_id UUID REFERENCES comments(id) ON DELETE CASCADE, -- ID родительского комментария
+                                            document_id UUID NOT NULL, -- ID документа, к которому относится комментарий
+                                            document_version TEXT NOT NULL, -- Версия документа
+                                            content TEXT NOT NULL, -- Текст комментария
+
+    CONSTRAINT fk_document FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE -- Связь с таблицей документов
+);
+CREATE TABLE role_document_access (
+                                            id UUID PRIMARY KEY,
+                                            role_id UUID NOT NULL,
+                                            document_id UUID NOT NULL,
+                                            access_type VARCHAR(10) NOT NULL,
+                                            FOREIGN KEY (role_id) REFERENCES roles(id),
+                                            FOREIGN KEY (document_id) REFERENCES documents(id)
 );
 
 
@@ -86,6 +111,14 @@ ALTER TABLE template_schema.user_space_access
     ALTER COLUMN id SET DATA TYPE UUID USING id::uuid,
     ALTER COLUMN user_id SET DATA TYPE UUID USING user_id::uuid,
     ALTER COLUMN space_id SET DATA TYPE UUID USING space_id::uuid;
+
+ALTER TABLE template_schema.comments
+    ALTER COLUMN id SET DATA TYPE UUID USING id::uuid,
+    ALTER COLUMN author_id SET DATA TYPE UUID USING author_id::uuid,
+    ALTER COLUMN parent_id SET DATA TYPE UUID USING parent_id::uuid;
+    ALTER COLUMN document_id SET DATA TYPE UUID USING document_id::uuid;
+
+
 
 -- Индексы для таблицы пользователей
 CREATE INDEX idx_users_username ON template_schema.users(username);

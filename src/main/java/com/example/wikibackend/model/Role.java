@@ -23,6 +23,9 @@ public class Role {
 
     private String description;
 
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RoleDocumentAccess> documentAccesses = new HashSet<>();
+
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
@@ -44,6 +47,14 @@ public class Role {
     public String getDescription() { return description; }
 
     public void setDescription(String description) { this.description = description; }
+
+    public Set<RoleDocumentAccess> getDocumentAccesses() {
+        return documentAccesses;
+    }
+
+    public void setDocumentAccesses(Set<RoleDocumentAccess> documentAccesses) {
+        this.documentAccesses = documentAccesses;
+    }
 
     public Role(UUID id, String role_name, String description) {
         this.id = id;
