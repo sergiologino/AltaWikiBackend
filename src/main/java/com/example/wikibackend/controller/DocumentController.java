@@ -34,7 +34,7 @@ public class DocumentController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = DocumentDTO.class),
-                            examples = @ExampleObject(value = "{\"organizationId\": \"5929cf36-101f-471f-a9b0-afbb3964cd37\", \"title\": \"Заголовок документа\", \"status\": \"ACTIVE\",\"spaceId\": \"729f370d-faa8-486e-b4ee-bd46b70e14d6\", \"authorId\": \"79ddc8b8-1057-43e5-9e2b-f49fe9917a36\", \"content\": \"Содержимое документа\"}"))),
+                            examples = @ExampleObject(value = "{\"organizationId\": \"5929cf36-101f-471f-a9b0-afbb3964cd37\", \"title\": \"Заголовок документа\", \"status\": \"ACTIVE\",\"spaceId\": \"729f370d-faa8-486e-b4ee-bd46b70e14d6\", \"authorId\": \"79ddc8b8-1057-43e5-9e2b-f49fe9917a36\", \"parentId\": \"79ddc8b8-1057-43e5-9e2b-f49fe9917a36\", \"content\": \"Содержимое документа\"}"))),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Документ успешно создан",
                             content = @Content(schema = @Schema(implementation = Document.class))),
@@ -118,7 +118,7 @@ public class DocumentController {
     @Operation(summary = "Получение документа по ID",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Документ найден",
-                            content = @Content(schema = @Schema(implementation = Document.class))),
+                            content = @Content(schema = @Schema(implementation = DocumentDTO.class))),
                     @ApiResponse(responseCode = "404", description = "Документ не найден")
             })
     @GetMapping("/{id}")
@@ -131,7 +131,7 @@ public class DocumentController {
             return ResponseEntity.badRequest().body("Не удалось определить организацию, возможно вы не авторизованы");
         }
 
-        Document document = documentService.getDocumentById(organizationId, id);
+        DocumentDTO document = documentService.getDocumentById(organizationId, id);
 
         if (document != null) {
             return ResponseEntity.ok(document);

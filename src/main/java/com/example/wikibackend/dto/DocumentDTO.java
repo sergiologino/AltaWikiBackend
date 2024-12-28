@@ -11,11 +11,9 @@ import java.util.UUID;
 @Getter
 @Setter
 public class DocumentDTO extends BaseDTO {
+
     private String title;
     private DocumentStatus status;
-
-
-
     private String content;
     private UUID authorId;
     private UUID spaceId;
