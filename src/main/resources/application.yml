@@ -75,7 +75,7 @@ management:
       exposure:
         include: "*"
 jwt:
-  secret: your-secret-key
+  secret: my-super-secret-key-for-jwt-signature
   expiration:
-    access: 3600000 # 1 hour in milliseconds
-    refresh: 86400000 # 1 day in milliseconds
+    access: 3600000  # 1 час в миллисекундах
+    refresh: 86400000 # 1 день в миллисекундах
