@@ -24,7 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${jwt.secret}")
+    @Value(staticConstructor = "${jwt.secret}")
     private String jwtSecret;
 
     @Bean

@@ -1,11 +1,9 @@
 package com.example.wikibackend.service;
 
 import com.example.wikibackend.config.SchemaContext;
-import com.example.wikibackend.config.SchemaInterceptor;
 import com.example.wikibackend.config.SwitchSchema;
 import com.example.wikibackend.dto.UserDTO;
 import com.example.wikibackend.mapper.UserMapper;
-import com.example.wikibackend.model.Organization;
 import com.example.wikibackend.model.User;
 import com.example.wikibackend.model.UserAdmin;
 import com.example.wikibackend.repository.UserAdminRepository;
@@ -15,7 +13,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -132,6 +129,18 @@ public class UserService {
         }else{
             return Optional.empty();
         }
+    }
+
+    public User findByUsername(String username) {
+
+        if (userRepository.findByUsername(username).isPresent())
+            {
+                return userRepository.findByUsername(username);
+            }
+        else {
+            return new User();
+            };
+
     }
 }
 
