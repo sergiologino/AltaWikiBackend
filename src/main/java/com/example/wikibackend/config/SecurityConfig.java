@@ -24,9 +24,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value(staticConstructor = "${jwt.secret}")
-    private String jwtSecret;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -41,11 +38,6 @@ public class SecurityConfig {
                 .httpBasic(withDefaults());
 
         return http.build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder(jwtSecret String secret) {
-        return NimbusJwtDecoder.withSecretKey(Keys.hmacShaKeyFor(secret.getBytes())).build();
     }
 
     @Bean

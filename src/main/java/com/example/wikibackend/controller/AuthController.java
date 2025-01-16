@@ -50,25 +50,25 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @PostMapping("/login")
-    @Operation(summary = "Авторизация пользователя", description = "Авторизация пользователя и выдача токенов")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) {
-        User user =  userService.findByUsername(userDTO.getUsername());
-       return user
-            .filter(u -> passwordEncoder.matches(user.getPassword(), u.getPassword()))
-            .map(u -> {
-                String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
-                String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
-
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("accessToken", accessToken);
-                tokens.put("refreshToken", refreshToken);
-                return ResponseEntity.ok(tokens);
-            })
-            .orElse(ResponseEntity.status(401).build());
-
-        }
-    }
+//    @PostMapping("/login")
+//    @Operation(summary = "Авторизация пользователя", description = "Авторизация пользователя и выдача токенов")
+//    public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) {
+//        User user =  userService.findByUsername(userDTO.getUsername());
+//       return user
+//            .filter(u -> passwordEncoder.matches(user.getPassword(), u.getPassword()))
+//            .map(u -> {
+//                String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
+//                String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
+//
+//                Map<String, String> tokens = new HashMap<>();
+//                tokens.put("accessToken", accessToken);
+//                tokens.put("refreshToken", refreshToken);
+//                return ResponseEntity.ok(tokens);
+//            })
+//            .orElse(ResponseEntity.status(401).build());
+//
+//        }
+//    }
 
 
 
