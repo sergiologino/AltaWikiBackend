@@ -74,3 +74,8 @@ management:
     web:
       exposure:
         include: "*"
+jwt:
+  secret: e0ccMN3fqRE30HcE6Me2xnGF88e1xVrGwNndNzTd
+  expiration:
+    access: 3600000  # 1 час в миллисекундах
+    refresh: 86400000 # 1 день в миллисекундах
